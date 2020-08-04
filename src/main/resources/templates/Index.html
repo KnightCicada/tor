@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>抓包</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="assets/css/fontawesome.css"/>
+    <link rel="stylesheet" href="assets/css/templatemo-style.css"/>
+    <link rel="stylesheet" href="assets/css/owl.css"/>
+    <!-- Scripts -->
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/transition.js"></script>
+    <script src="assets/js/owl-carousel.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <script src="layer/layer.js"></script>
+
+</head>
+
+<body class="is-preload">
+
+<script>
+    window.onload = function () {
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            // 获取已激活的标签页的名称
+            var nowselect = $(e.target).text();//target:present li
+            var myselect = document.getElementById("way");
+            //alert("111:"+nowselect);
+            if (nowselect === ("选择抓包命令参数")) {//如果选的是 "选择抓包命令参数 " ，selectWay=0
+                myselect.value = 0;
+                //alert(myselect);
+            } else if (nowselect === ("选自定义抓包命令")) {//如果选的是 "选自定义抓包命令 " ，selectWay=1
+                myselect.value = 1;
+                //alert(myselect);
+            } else {
+                myselect.value = 2;
+            }
+        });
+    };
+</script>
+
+<style>
+    .selectpicker {
+        width: 100%;
+        height: 35px;
+    }
+
+    #editShare .button {
+        width: 200px;
+        height: 50px;
+        background: #c5464a;
+        color: #fff;
+    }
+
+    #editShare input, #editShare select {
+        margin: 0px 10px;
+        border: 2px solid #c5464a;
+        border-radius: 5px;
+        background: transparent;
+        text-align: center;
+        height: 50px;
+        width: calc(100% - 150px);
+        text-align-last: center;
+    }
+</style>
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <!-- Header -->
+            <header id="header">
+                <div class="logo">
+                    <a href="index">抓包并存储</a>
+                </div>
+            </header>
+
+            <form action="/grab_packets" method="post" id="editShare">
+                <p><label class="title">地点:</label>
+                    <select name="grabPlace" id="selectplace" class="selectpicker ">
+                        <option value="local" selected="selected">本地抓包</option>
+                        <option value="server">服务器抓包</option>
+                    </select>
+                </p>
+
+                <label for="way"></label><input type="text" style="display:none" th:value="0" id="way" name="selectWay"/>
+
+
+                <ul id="myTab" class="nav nav-tabs">
+                    <li class="active" style="width: 50%; height:100px; text-align: center">
+                        <a href="#firstPage" data-toggle="tab">选择抓包命令参数</a>
+                    </li>
+                    <li style="width: 50%; height:100px;text-align: center">
+                        <a href="#secondPage" data-toggle="tab">选自定义抓包命令</a>
+                    </li>
+                </ul>
+
+
+                <div id="myTabContent" class="tab-content">
+
+                    <div class="tab-pane fade in active" id="firstPage">
+                        <p><label for="number" class="title">数量:</label>
+                            <input type="text" th:value="100" name="packetCount" id="number"/>
+                        </p>
+                        <p><label class="title">协议:</label>
+                            <select name="protocol" id="selectpro" class="selectpicker ">
+                                <option value="tcp">TCP</option>
+                                <option value="udp">UDP</option>
+                                <option value="IP">IP</option>
+                                <option value=" " selected="selected">All</option>
+                            </select>
+                        </p>
+                    </div>
+
+                    <div class="tab-pane fade" id="secondPage">
+                        <p><label for="command" class="title">命令:</label>
+                            <input type="text" th:value="本地为Jpcap规则，服务器为tcpdump规则" name="command"
+                                   id="command"/>
+                        </p>
+                        <p>
+                            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top"
+                                    title="本地自定义命令如：1.dst host xx.xx.xx.xx  表示过滤目标主机ip为xx.xx.xx.xx的数据 2.src port xx 表示过滤源端口号为xx的数据 3.http or telnet 表示过滤http或telnet协议的数据；其条件可以组合使用：
+取反操作 (`!' 或 `not').连接操作 (`and').选择操作 ( `or')；需要指定数量请在最后加上例如：-c 100，不加默认抓10个。服务器自定义抓包命令即为输入tcpdump命令，如：tcpdump -c 1000  host 192.168.0.1 and udp表示监听与192.168.0.1的udp协议通信情况，抓1000个包；不必写‘-w 某文件名’。">
+                                自定义命令详细介绍
+                            </button>
+                        </p>
+                    </div>
+
+                </div>
+                <p>
+                <div align="center">
+                    <input type="submit" class="button" value="抓包" id="btnPost"/>
+                </div>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="inner">
+            <!-- Menu -->
+            <nav id="menu">
+                <ul>
+                    <li><a href="/classify">流量包判别/classify</a></li>
+                    <li><a href="/index">抓包/index</a></li>
+                    <li><a href="/packet">数据包管理/home</a></li>
+                    <li><a href="/feature">提取特征/feature</a></li>
+                    <li><a href="/train">数据流量训练模型/train</a></li>
+                    <li><a href="/model">模型信息管理/model</a></li>
+                    <li><a href="/test">测试模型/test</a></li>
+                    <li><a href="/testMulti">多分类/multi</a></li>
+                    <li><a href="http://10.170.50.58:8089/relay-country.html">态势感知</a></li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+
+<script th:inline="javascript">
+    var result = [[${result}]];
+    if (JSON.stringify(result) !== '{}') {
+        if (result.code !== 1) {
+            layer.msg(result.msg);
+        }
+    }
+</script>
+</html>
+

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>中继节点全球分布</title>
+    <!-- 下面两行的意思是，浏览器从网络上获取echart包，而不需要你配置任何编程环境  -->
+    <!--        <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>-->
+    <!--        <script type="text/javascript" src="https://assets.pyecharts.org/assets/maps/world.js"></script>-->
+
+    <!--        <script type="text/javascript" th:src="@{/assets/echarts.min.js}"></script>-->
+    <!--        <script type="text/javascript" th:src="@{/assets/world.js}"></script>-->
+    <script src="/assets/js/echarts.min.js"></script>
+    <script src="/assets/js/world.js"></script>
+
+</head>
+<body>
+<!-- div标签表示一个块，它是我们的图片容器。所以属性style里 宽度和高度是可以自定义的，1800px代表1800像素，块的宽度和高度于生成图片的尺寸相关，在下面的饼状图中则同理。-->
+<div id="worldView" class="chart-container" style="width:1800px; height:1200px;"></div>
+<script th:inline="javascript">
+    //  所有的脚本代码都写在script标签里
+    var chart_container = echarts.init(
+        document.getElementById('worldView'), 'white', {renderer: 'canvas'});
+    // var option代表定义一个名为option的变量，后面花括号里的代表我们需要作图的参数设置
+    var option_container = {
+        title: {
+            text: '中继节点全球分布',
+            left: 'center',
+            textStyle: {
+                color: '#333',
+                fontSize: 50, // 务必记住设置文字大小只能是数字
+                fontWeight: 'lighter'
+            }
+        },
+        // 默认的颜色数组 （如果不明确设置每个数据项的颜色，则会采用默认的数组
+        // 此处的颜色为十六进制表示，也可以使用rgb来表示。简单地理解就是一串字符就代表一个颜色，挑选喜欢的颜色可以自行搜索颜色
+        "color": ["#ac6767", "#1d953f", "#2d953f", "#6950a1", "#918597"],
+        "series": [
+            {
+                // 图标类型为 地图
+                "type": "map",
+                "label": {
+                    "show": false,
+                    "position": "top",
+                    "margin": 8
+                },
+                "mapType": "world",  // 地图类型为 世界地图
+                // data里的每一个{}中，是一项数据整体，标明了该项数据的名称，值，以及颜色等参数。注意：此处的字符串需要加双引号""(输入法切换至英文状态)
+                "data": [[${worldView}]],
+                "roam": true,
+                "zoom": 1,
+                // 去除各个国家上的小红点
+                "showLegendSymbol": false,
+            }
+        ],
+
+        // 鼠标悬浮，单击产生的效果（在网页上可以动态显示）
+        "tooltip": {
+            "show": true,
+            "trigger": "item",
+            "triggerOn": "mousemove|click",
+            "axisPointer": {
+                "type": "line"
+            },
+            "textStyle": {
+                "fontSize": 14
+            },
+            "borderWidth": 0
+        }
+    };
+    chart_container.setOption(option_container);
+</script>
+</body>
+</html>
+

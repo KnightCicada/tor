@@ -1,0 +1,27 @@
+target/
+geolite2.mmdb
+
+*.class
+
+#package file
+*.war
+*.ear
+
+#kdiff3 ingnore
+*.orig
+
+#eclipse ignore
+.settings/
+.project
+.classpath
+
+
+# temp file
+*.log
+*.cache
+*.diff
+*.tmp
+
+#system
+.DS_Store
+Thumbs.db

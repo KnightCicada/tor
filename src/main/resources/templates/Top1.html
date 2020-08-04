@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+
+    <title>带宽前10的中继信息</title>
+    <title>Title</title>
+    <script type="text/javascript" src="assets/js/jquery-1.9.1.min.js"></script>
+    <!-- <script type="text/javascript" src="back-endPage.js"></script> --> <!-- 后台分页 -->
+    <script type="text/javascript" src="assets/js/front-endPage.js"></script><!-- 前台分页 -->
+
+    <link rel="stylesheet" type="text/css" href="assets/css/table.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/init.css">
+</head>
+
+<div id="topRelays"></div>
+<!-- Wrapper -->
+<script th:inline="javascript" type="text/javascript">
+    //前台分页的样子
+    data = [[${Top}]]
+        $('#topRelays').CJJTable({
+            'title': ["Ip", "节点名称", "国家代码", "带宽值KB/s", "在线时间/h", "主机名", "使用平台"],//thead中的标题 必填
+            'body': ["ip", "routerName", "countryCode", "bandwidth", "uptime", "hostname", "platform"],//tbody td 取值的字段 必填
+            'display': [1, 1, 1, 1, 1, 1, 1],//隐藏域，1显示，2隐藏 必填
+            'pageNUmber': 30,//每页显示的条数 选填
+            'pageLength': data.length,//选填
+            'url': data,//数据源 必填
+            dbTrclick: function (e) {//双击tr事件
+                alert(e.find('.time').html())
+            }
+        });
+</script>
+
+
+
+
+</body>
+</html>

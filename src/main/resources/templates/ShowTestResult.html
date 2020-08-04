@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>分类结果展示</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}"/>
+    <script th:src="@{https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js}" type="text/javascript"></script>
+    <link rel="stylesheet" th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+
+
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" type="text/css">
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/assets/css/templatemo-style.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/assets/css/owl.css}" type="text/css">
+
+    <!-- Scripts -->
+    <!-- Bootstrap core JavaScript -->
+    <script th：src="@{/vendor/jquery/jquery.min.js}" type="text/javascript"></script>
+    <script th：src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" type="text/javascript"></script>
+    <script th：src="@{/assets/js/browser.min.js}" type="text/javascript"></script>
+    <script th：src="@{/assets/js/breakpoints.min.js}" type="text/javascript"></script>
+    <script th：src="@{/assets/js/transition.js}" type="text/javascript"></script>
+    <script th：src="@{/assets/js/owl-carousel.js}" type="text/javascript"></script>
+    <script th：src="@{/assets/js/custom.js}" type="text/javascript"></script>
+
+    <style>
+        .table thead tr {
+            display: block;
+        }
+
+        .table tbody {
+            display: inline-block;
+            height: 250px;
+            width: 100%;
+            overflow: auto;
+        }
+
+        .table th {
+            width: 10%;
+        }
+
+        .table td {
+            width: 8%;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var scrollbar = document.querySelector('.scrollbar');
+            var container = scrollbar.parentNode;
+            container.scrollbar = scrollbar;
+            container.ratio =
+                (container.scrollHeight - container.offsetHeight) / (container.offsetHeight - scrollbar.offsetHeight);
+            container.addEventListener('mousewheel', function (e) {
+                this.scrollTop += e.deltaY;
+                this.scrollbar.style.top = (this.scrollTop + this.scrollTop / this.ratio) + 'px';
+            });
+            container.addEventListener('mousedown', function (e) {
+                if (e.target === this.scrollbar) {
+                    this.prevY = e.pageY;
+                }
+            });
+            container.addEventListener('mouseup', function (e) {
+                this.prevY = null;
+            });
+            container.addEventListener('mousemove', function (e) {
+                if (this.prevY) {
+                    this.scrollTop += (e.pageY - this.prevY) * this.ratio;
+                    this.scrollbar.style.top = (this.scrollTop + this.scrollTop / this.ratio) + 'px';
+                    this.prevY = e.pageY;
+                }
+                e.preventDefault();
+            });
+        }
+    </script>
+</head>
+<body class="is-preload">
+<style>
+    #editShare .button {
+        width: 200px;
+        height: 50px;
+        background: #c5464a;
+        color: #fff;
+    }
+</style>
+<!-- Wrapper -->
+<div id="wrapper">
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <!-- Header -->
+            <header id="header">
+                <div class="logo">
+                    <a href="/test">分类结果展示</a>
+                </div>
+            </header>
+            <fieldset>
+                <legend>
+                    <strong style="width: 100px">分类结果展示</strong>
+                </legend>
+            </fieldset>
+            <div class="btn-group" data-toggle="buttons">
+                <table class="table table-hover table-condensed" style="table-layout: fixed">
+                    <thead>
+                    <tr align="center">
+                        <th>源IP</th>
+                        <th>源port</th>
+                        <th>目的IP</th>
+                        <th>目的port</th>
+                        <th>协议</th>
+                        <th>分类结果</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="result : ${resultList}">
+                        <td style="width:200px;" th:text="${result.getSrcIP()}"></td>
+                        <td style="width:200px;" th:text="${result.getSrcPort()}"></td>
+                        <td style="width:200px;" th:text="${result.getDstIP()}"></td>
+                        <td style="width:200px;" th:text="${result.getDstPort()}"></td>
+                        <td style="width:200px;" th:text="${result.getProtocol()}"></td>
+                        <td style="width:200px;" th:text="${result.getLabel()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div align="center" class="form-group">
+                <input class="button" onclick="history.back() "
+                       style="width: 200px;height: 50px;background:#c5464a;color:#fff;" type="submit" value="返回"/>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="inner">
+
+            <!-- Menu -->
+            <nav id="menu">
+                <ul>
+                    <li><a href="/classify">流量包判别/classify</a></li>
+                    <li><a href="/index">抓包/index</a></li>
+                    <li><a href="/packet">数据包管理/home</a></li>
+                    <li><a href="/feature">提取特征/feature</a></li>
+                    <li><a href="/train">数据流量训练模型/train</a></li>
+                    <li><a href="/model">模型信息管理/model</a></li>
+                    <li><a href="/test">测试模型/test</a></li>
+                    <li><a href="/testMulti">多分类/multi</a></li>
+                    <li><a href="http://10.170.50.58:8089/relay-country.html">态势感知</a></li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
