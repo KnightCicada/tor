@@ -9,8 +9,8 @@ import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.service.ModelService;
-import com.tor.service.TestPacketService;
 import com.tor.service.TestService;
+import com.tor.service.PacketService;
 import com.tor.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class DirectClassifyController {
     @Autowired
     TestService testService;
     @Autowired
-    private TestPacketService testPacketService;
+    private PacketService packetService;
     @Autowired
     private ModelService modelService;
     private Model model = new Model();
@@ -43,7 +43,7 @@ public class DirectClassifyController {
     public String findAll(ModelMap map, @RequestParam(required = false, defaultValue = "1", value = "pn") Integer pn, @RequestParam(required = false, defaultValue = "1", value = "pn1") Integer pn1) {
         List<Packet> packetList = new LinkedList<>();
         PageHelper.startPage(pn, 6);
-        packetList = testPacketService.findAllPacket();
+        packetList = packetService.findAllTestPacket();
         map.addAttribute("packetList", packetList);
         PageInfo<Packet> packetPage = new PageInfo<>(packetList);
         map.addAttribute("packetPage", packetPage);
@@ -83,8 +83,8 @@ public class DirectClassifyController {
     //删除文件
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String deletePacket(@PathVariable Integer id, ModelMap modelMap) {
-        testPacketService.deletePacket(id);
-        List<Packet> resList = testPacketService.findAllPacket();
+        packetService.deletePacket(id);
+        List<Packet> resList = packetService.findAllTestPacket();
         PageInfo<Packet> pageList = new PageInfo<>(resList);
         modelMap.addAttribute("data", resList);
         modelMap.addAttribute("page", pageList);
@@ -119,7 +119,7 @@ public class DirectClassifyController {
                 packet.setPacketPath(fullPcapName);
                 packet.setType(type);
                 packet.setCsvPath(PropertiesUtil.getPcapCsvPath() + filePcapName.replace(".pcap", ""));
-                testPacketService.insertPacket(packet);
+                packetService.insertPacket(packet);
                 file.transferTo(fullPcapFile);
             } else {
 
@@ -129,7 +129,7 @@ public class DirectClassifyController {
             log.error(e.toString());
         }
         //加入数据包之后，显示现有数据包
-        List<Packet> packetList = testPacketService.findAllPacketDesc();
+        List<Packet> packetList = packetService.findAllTestPacketDesc();
         PageInfo<Packet> pageList = new PageInfo<>(packetList);
         modelMap.addAttribute("data", packetList);
         modelMap.addAttribute("page", pageList);

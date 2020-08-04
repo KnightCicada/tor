@@ -6,7 +6,7 @@ import com.tor.domain.Feature;
 import com.tor.domain.Packet;
 import com.tor.result.Const;
 import com.tor.service.FeatureService;
-import com.tor.service.TrainPacketService;
+import com.tor.service.PacketService;
 import com.tor.util.AlgorithmUtil;
 import com.tor.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class FeatureController {
     @Autowired
     private FeatureService featureService;
     @Autowired
-    private TrainPacketService trainPacketService;
+    private PacketService packetService;
     private Feature feature = new Feature();
 
     @RequestMapping(method = RequestMethod.GET)
@@ -38,7 +38,7 @@ public class FeatureController {
         List<Packet> TrainFileInforList;
 
         PageHelper.startPage(pn, 6);
-        List<Packet> packetList = trainPacketService.findAllPacket();
+        List<Packet> packetList = packetService.findAllTrainPacket();
         map.addAttribute("Feature", packetList);
         PageInfo<Packet> pageList = new PageInfo<>(packetList);
         map.addAttribute("page", pageList);

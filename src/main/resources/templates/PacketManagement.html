@@ -29,14 +29,14 @@
             <!-- Header -->
             <header id="header">
                 <div class="logo">
-                    <a href="home">数据包管理</a>
+                    <a href="/packet/findAllPacket">数据包管理</a>
                 </div>
             </header>
             <div class="contentDiv">
                 <h5><strong><font size="5">数据包信息管理系统</font><br/></strong></h5>
                 <form action="/packet/findPacketByName" method="post">
-                    <label for="packetName">查找数据包</label>
-                    <input class="form-control" id="packetName" name="packetName" placeholder="请输入关键字(数据包/数据包类型)"
+                    <label for="word">查找数据包</label>
+                    <input class="form-control" id="word" name="word" placeholder="请输入关键字(数据包/数据包类型)"
                            type="text"/>
                     <input class="button" id="btnPost" type="submit" value="查询"/>
                 </form>

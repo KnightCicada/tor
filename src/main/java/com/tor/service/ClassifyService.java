@@ -11,7 +11,6 @@ import com.tor.util.AlgorithmUtil;
 import com.tor.util.ArffUtil;
 import com.tor.util.LabelUtil;
 import com.tor.util.PropertiesUtil;
-import iscx.cs.unb.ca.ifm.ISCXFlowMeter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ public class ClassifyService {
     private ModelService modelService;
 
     @Autowired
-    private TestPacketService packetService;
+    private PacketService packetService;
 
 
     /**
