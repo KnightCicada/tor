@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tor.domain.Flow;
 import com.tor.domain.Model;
+import com.tor.domain.MultiNum;
 import com.tor.domain.Packet;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
@@ -12,6 +13,7 @@ import com.tor.service.ModelService;
 import com.tor.service.PacketService;
 import com.tor.service.TestService;
 import com.tor.util.PropertiesUtil;
+import com.tor.util.ProtocolLabel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -142,59 +144,17 @@ public class TestMultiController {
 
             //调用测试算法，得到一个表，表示测试结果。
             List<Flow> resultList = testService.getModelClassifyListMulti(testFileName, testCsvPath, modelPath, featurePath);
-            int total = resultList.size();
-            int chat = 0;
-            int video = 0;
-            int voip = 0;
-            int p2p = 0;
-            int file = 0;
-            int mail = 0;
-            int browsing = 0;
-            int audio = 0;
-            for (Flow f : resultList) {
-                switch (f.getLabel()) {
-                    case "CHAT":
-                        chat++;
-                        break;
-                    case "VIDEO":
-                        video++;
-                        break;
-                    case "VOIP":
-                        voip++;
-                        break;
-                    case "P2P":
-                        p2p++;
-                        break;
-                    case "FILE-TRANSFER":
-                        file++;
-                        break;
-                    case "MAIL":
-                        mail++;
-                        break;
-                    case "BROWSING":
-                        browsing++;
-                        break;
-                    case "AUDIO":
-                        audio++;
-                        break;
-                    default:
-                }
-                if ("6".equals(f.getProtocol())) {
-                    f.setProtocol("TCP");
-                } else if ("17".equals(f.getProtocol())) {
-                    f.setProtocol("UDP");
-                }
-            }
 
-            modelMap.addAttribute("total", total);
-            modelMap.addAttribute("chat", chat);
-            modelMap.addAttribute("video", video);
-            modelMap.addAttribute("voip", voip);
-            modelMap.addAttribute("p2p", p2p);
-            modelMap.addAttribute("file", file);
-            modelMap.addAttribute("mail", mail);
-            modelMap.addAttribute("browsing", browsing);
-            modelMap.addAttribute("audio", audio);
+            MultiNum multiNum = ProtocolLabel.protocolAndMultiNum(resultList);
+            modelMap.addAttribute("total", resultList.size());
+            modelMap.addAttribute("chat", multiNum.getChat());
+            modelMap.addAttribute("video", multiNum.getVideo());
+            modelMap.addAttribute("voip", multiNum.getVoip());
+            modelMap.addAttribute("p2p", multiNum.getP2p());
+            modelMap.addAttribute("file", multiNum.getFile());
+            modelMap.addAttribute("mail", multiNum.getMail());
+            modelMap.addAttribute("browsing", multiNum.getBrowsing());
+            modelMap.addAttribute("audio", multiNum.getAudio());
 
             modelMap.addAttribute("resultList", resultList);
             return Const.TEST_RESULT_MULTI_PAGE;
