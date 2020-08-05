@@ -22,7 +22,7 @@ import java.util.Properties;
 public class GrabPacketsService {
 
     @Autowired
-    private TestPacketService testPacketService;
+    private PacketService testPacketService;
 
 //    @Async("taskExecutor")
 //    public CompletableFuture<Integer> insert() throws InterruptedException {

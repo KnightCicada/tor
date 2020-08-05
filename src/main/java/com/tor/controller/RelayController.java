@@ -3,6 +3,7 @@ package com.tor.controller;
 import com.tor.domain.ItemStyle;
 import com.tor.domain.Relay;
 import com.tor.domain.WorldView;
+import com.tor.result.Const;
 import com.tor.service.RelayService;
 import com.tor.util.RandomColorUtils;
 import com.tor.vo.CountryCnt;
@@ -52,8 +53,7 @@ public class RelayController {
             worldViewArrayList.add(worldView);
         }
         modelMap.addAttribute("worldView", worldViewArrayList);
-        return "Worldview";
-//        return Const.WORLDVIEW_PAGE;
+        return Const.WORLDVIEW_PAGE;
     }
 
     @RequestMapping(value = "/top")
@@ -69,6 +69,6 @@ public class RelayController {
             }
         }
         modelMap.addAttribute("Top", top);
-        return "Top1";
+        return Const.TOP_RELAYS_PAGE;
     }
 }

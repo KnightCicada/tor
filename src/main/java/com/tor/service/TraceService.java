@@ -21,7 +21,7 @@ import java.util.Set;
 public class TraceService {
 
     @Autowired
-    private TrainPacketService packetService;
+    private PacketService packetService;
 
     public Set<SourceAndDesIPVO> getIPs() throws IOException {
         List<Packet> list = packetService.findAllPacket();

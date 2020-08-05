@@ -35,7 +35,7 @@ public class ClassifyService {
     private ModelService modelService;
 
     @Autowired
-    private TestPacketService packetService;
+    private PacketService packetService;
 
     @Autowired
     private TestService testService;
@@ -179,13 +179,13 @@ public class ClassifyService {
         writer.writeRecord(headers);
         for (int i = 0; i < classifyResult.size(); i++) {
             String[] strings = csvList.get(i);
-            strings[strings.length - 1] = classifyResult.get(i) + "";
+            strings[strings.length - 1] = classifyResult.get(i).getLabel() + "";
             writer.writeRecord(strings);
         }
         writer.close();
     }
 
-    public List<Flow> getFlowListFromDB(String pcapFileName) {
+    public List<Flow> getFlowListFromFile(String pcapFileName) {
         List<Flow> list = new ArrayList<>();
         String csvFileName = PropertiesUtil.getPcapCsvPath() + "ISCX_" + pcapFileName + ".csv";
         File file = new File(csvFileName);

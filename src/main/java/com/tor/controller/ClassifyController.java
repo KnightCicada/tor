@@ -5,7 +5,9 @@ import com.tor.result.CodeMsg;
 import com.tor.result.Result;
 import com.tor.service.ClassifyService;
 import com.tor.util.PropertiesUtil;
+import com.tor.util.ProtocolLabel;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -51,20 +54,20 @@ public class ClassifyController {
             String fullPcapName = PropertiesUtil.getPcapPath() + filePcapName;
             File fullPcapFile = new File(fullPcapName);
             //检测是否存在目标
-
-//            if (!fullPcapFile.getParentFile().exists()) {
-//                fullPcapFile.getParentFile().mkdirs();
-//            }
+//            String fileMd5 = DigestUtils.md5Hex(new FileInputStream(fullPcapFile));
+//            String full
             //TODO 去数据库中查找，若重复，则直接返回结果odo MD5查看重复
             if (!fullPcapFile.exists()) {
                 file.transferTo(fullPcapFile);
                 result = classifyService.getClassifyResult(fullPcapName, filePcapName);
+            } else {
+                List<Flow> list = classifyService.getFlowListFromFile(filePcapName);
+                result = Result.success(list);
             }
-//            else {
-//                List<Flow> list = classifyService.getFlowListFromDB(filePcapName);
-//                result = Result.success(list);
-//            }
             int torSize = 0;
+            if (result == null) {
+                modelMap.addAttribute("result", result);
+            }
             if (result.getCode() == 1) {
                 List<Flow> flowList = result.getData();
                 for (Flow flow : flowList) {
@@ -72,6 +75,7 @@ public class ClassifyController {
                         torSize++;
                     }
                 }
+                ProtocolLabel.protocol(flowList);
             }
             System.out.println("result.size: " + result.getData().size());
             System.out.println("tor.size: " + torSize);

@@ -149,12 +149,6 @@
                         </tbody>
                     </table>
                 </div>
-                <form>
-                    <div class="form-group" align="center">
-                        <input type="submit" class="button" value="返回" onclick="history.back() "
-                               style="width: 200px;height: 50px;background:#c5464a;color:#fff;"/>
-                    </div>
-                </form>
             </div>
 
 
@@ -186,6 +180,7 @@
 
 <script th:inline="javascript">
     var result = [[${result}]];
+
     alert(result)
     layer.msg(result);
     if(JSON.stringify(result) !== '{}'){
