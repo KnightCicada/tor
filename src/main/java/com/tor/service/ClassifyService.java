@@ -35,7 +35,7 @@ public class ClassifyService {
     private ModelService modelService;
 
     @Autowired
-    private TestPacketService packetService;
+    private PacketService packetService;
 
     @Autowired
     private TestService testService;

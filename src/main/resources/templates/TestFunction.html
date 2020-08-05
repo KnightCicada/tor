@@ -77,7 +77,6 @@
                             <th>数据类型</th>
                             <th>数据包对应csv文件路径</th>
                             <th>选择</th>
-                            <th>删除</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -89,9 +88,6 @@
                             <td>
                                 <label class="btn btn-primary"><input name="testFile" th:value="${packet.csvPath}"
                                                                       type="radio">选择</label>
-                            </td>
-                            <td><a class="btn btn-danger"
-                                   th:href="@{'/testPacket/delete?id='+${packet.id}}">删除</a></td>
                         </tr>
                         </tbody>
                     </table>

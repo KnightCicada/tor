@@ -2,7 +2,7 @@
 <html lang="ch" xmlns:c="http://www.w3.org/1999/XSL/Transform" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>特征提取</title>
+    <title>多分类特征提取</title>
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/default.css}"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
@@ -59,10 +59,10 @@
             <!-- Header -->
             <header id="header">
                 <div class="logo">
-                    <a href=/feature">数据流量分析选择</a>
+                    <a href="/featureMulti">数据流量分析选择</a>
                 </div>
             </header>
-            <form action="/feature/getFeature" id="editShare" method="post">
+            <form action="/featureMulti/getMultiFeature" id="editShare" method="post">
                 <div class="form-inline">
                     <p><label class="title">特征选择算法：Infogain+Ranker</label></p>
                 </div>

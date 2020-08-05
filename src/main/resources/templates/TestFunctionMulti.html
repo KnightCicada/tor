@@ -77,7 +77,6 @@
                             <th>数据类型</th>
                             <th>数据包对应csv文件路径</th>
                             <th>选择</th>
-                            <th>删除</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -90,18 +89,18 @@
                                 <label class="btn btn-primary"><input name="testFile" th:value="${packet.csvPath}"
                                                                       type="radio">选择</label>
                             </td>
-                            <td><a class="btn btn-danger"
-                                   th:href="@{'/testPacket/delete?id='+${packet.id}}">删除</a></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <a th:href="@{'/testMulti?pn='+${packetPage.firstPage}}">首页</a>
-                <c:if test="${packetPage.hasPreviousPage}"><a th:href="@{'/testMulti?pn='+${packetPage.prePage}}">上一页</a>
+                <c:if test="${packetPage.hasPreviousPage}"><a
+                        th:href="@{'/testMulti?pn='+${packetPage.prePage}}">上一页</a>
                 </c:if>
 
-                <c:if test="${packetPage.hasNextPage}"><a th:href="@{'/testMulti?pn='+${packetPage.nextPage}}">下一页</a></c:if>
+                <c:if test="${packetPage.hasNextPage}"><a th:href="@{'/testMulti?pn='+${packetPage.nextPage}}">下一页</a>
+                </c:if>
 
                 <a th:href="@{'/testMulti?pn='+${packetPage.lastPage}}">最后页</a>
                 <p>
@@ -153,7 +152,8 @@
                 <c:if test="${modelPage.hasPreviousPage}"><a th:href="@{'/testMulti?pn1='+${modelPage.prePage}}">上一页</a>
                 </c:if>
 
-                <c:if test="${modelPage.hasNextPage}"><a th:href="@{'/testMulti?pn1='+${modelPage.nextPage}}">下一页</a></c:if>
+                <c:if test="${modelPage.hasNextPage}"><a th:href="@{'/testMulti?pn1='+${modelPage.nextPage}}">下一页</a>
+                </c:if>
 
                 <a th:href="@{'/testMulti?pn1='+${modelPage.lastPage}}">最后页</a>
                 <p>
