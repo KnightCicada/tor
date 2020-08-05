@@ -27,7 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/classify")
+//@RequestMapping("/classify")
 @Slf4j
 public class DirectClassifyController {
 

@@ -186,6 +186,7 @@
 
 <script th:inline="javascript">
     var result = [[${result}]];
+    alert(result)
     if(JSON.stringify(result) !== '{}'){
         if (result.code !== 1) {
             layer.msg(result.msg);
