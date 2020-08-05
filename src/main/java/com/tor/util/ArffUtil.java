@@ -110,6 +110,93 @@ public class ArffUtil {
         }
     }
 
+
+    public void csvToArffMulti(String filePath1, String filePath2) {
+        ArrayList<String> arrayList = new ArrayList<>();
+        String head;
+        head = new StringBuffer().
+                append("@relation feature.arff" + System.lineSeparator())
+                .append("@attribute duration numeric" + System.lineSeparator())
+                .append("@attribute flowBytsPsec numeric" + System.lineSeparator())
+                .append("@attribute flowPktsPsec numeric" + System.lineSeparator())
+                .append("@attribute flowIATMean numeric" + System.lineSeparator())
+                .append("@attribute flowIATStd numeric" + System.lineSeparator())
+                .append("@attribute flowIATMax numeric" + System.lineSeparator())
+                .append("@attribute flowIATMin numeric" + System.lineSeparator())
+                .append("@attribute fwdIATMean numeric" + System.lineSeparator())
+                .append("@attribute fwdIATStd numeric" + System.lineSeparator())
+                .append("@attribute fwdIATMax numeric" + System.lineSeparator())
+                .append("@attribute fwdIATMin numeric" + System.lineSeparator())
+                .append("@attribute bwdIATMean numeric" + System.lineSeparator())
+                .append("@attribute bwdIATStd numeric" + System.lineSeparator())
+                .append("@attribute bwdIATMax numeric" + System.lineSeparator())
+                .append("@attribute bwdIATMin numeric" + System.lineSeparator())
+                .append("@attribute activeMean numeric" + System.lineSeparator())
+                .append("@attribute activeStd numeric" + System.lineSeparator())
+                .append("@attribute activeMax numeric" + System.lineSeparator())
+                .append("@attribute activeMin numeric" + System.lineSeparator())
+                .append("@attribute idleMean numeric" + System.lineSeparator())
+                .append("@attribute idleStd numeric" + System.lineSeparator())
+                .append("@attribute idleMax numeric" + System.lineSeparator())
+                .append("@attribute idleMin numeric" + System.lineSeparator())
+                .append("@attribute label {CHAT,VIDEO,VOIP,P2P,FILE-TRANSFER,MAIL,BROWSING,AUDIO}" + System.lineSeparator())
+                .append(System.lineSeparator())
+                .append("@data" + System.lineSeparator())
+                .toString();
+        try {
+            //把训练集csv中的数据(不带头部)全部读入csvList中。然后把后面24个属性存在了stringBuilder中，在到了arrayList中。
+            ArrayList<String[]> csvList = new ArrayList<String[]>();
+            String csvFilePath = filePath1;
+            CsvReader reader = new CsvReader(csvFilePath, ',', Charset.forName("UTF-8"));//csv是以逗号进行分隔。
+            reader.readHeaders();//跳过头部
+            while (reader.readRecord()) {
+                csvList.add(reader.getValues());
+            }
+            reader.close();
+//            System.out.println("csvlist:"+csvList.size());
+            for (int row = 0; row < csvList.size(); row++) {
+//                System.out.println();
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(csvList.get(row)[5] + ",")
+                        .append(csvList.get(row)[6] + ",")
+                        .append(csvList.get(row)[7] + ",")
+                        .append(csvList.get(row)[8] + ",").append(csvList.get(row)[9] + ",").append(csvList.get(row)[10] + ",")
+                        .append(csvList.get(row)[11] + ",").append(csvList.get(row)[12] + ",").append(csvList.get(row)[13] + ",")
+                        .append(csvList.get(row)[14] + ",").append(csvList.get(row)[15] + ",").append(csvList.get(row)[16] + ",")
+                        .append(csvList.get(row)[17] + ",").append(csvList.get(row)[18] + ",").append(csvList.get(row)[19] + ",")
+                        .append(csvList.get(row)[20] + ",").append(csvList.get(row)[21] + ",").append(csvList.get(row)[22] + ",")
+                        .append(csvList.get(row)[23] + ",").append(csvList.get(row)[24] + ",").append(csvList.get(row)[25] + ",")
+                        .append(csvList.get(row)[26] + ",").append(csvList.get(row)[27] + ",").append(csvList.get(row)[28] + ",")
+                        .append(System.lineSeparator()).toString();
+                arrayList.add(stringBuilder.toString());
+            }
+//          System.out.println(arrayList.size());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println(ex);
+        }
+        try {
+            File mergeFile = new File(filePath2);
+
+            if (!mergeFile.exists()) {
+                mergeFile.createNewFile();
+            }
+            FileWriter fw = new FileWriter(mergeFile, false);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(head);//先把头部写入.arff文件
+            for (String s : arrayList) {
+//                System.out.println(s);
+                bw.write(s);//再把剩下的24个属性写入文件。
+            }
+            bw.close();
+            fw.close();
+//          System.out.println("change done!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * 将特征提取之外的特征删除，降低维度
      *
@@ -233,7 +320,6 @@ public class ArffUtil {
      */
     public void deleteMulti(String filePath, String features, String newFilePath) {
         String[] feature = features.split(",");
-//        System.out.println(feature.length);
         List<Flow> flowList = new ArrayList<Flow>();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("@relation ").append(new File(newFilePath).getName()).append(System.lineSeparator()).append(System.lineSeparator());
@@ -332,7 +418,6 @@ public class ArffUtil {
             bw.write(stringBuilder1.toString());//后写入了下面每一行的内容。写在了每个训练集对应的一个文件名+Feature+".arff"文件中。
             bw.close();
             fw.close();
-//          System.out.println("write done!");
         } catch (Exception e) {
             e.printStackTrace();
         }

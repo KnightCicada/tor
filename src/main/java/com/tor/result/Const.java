@@ -4,6 +4,7 @@ public class Const {
     public static final String MODEL_PAGE = "ModelManagement";
     public static final String PACKET_PAGE = "PacketManagement";
     public static final String FEATURE_PAGE = "Feature";
+    public static final String FEATURE_MUTLI_PAGE = "FeatureMulti";
     public static final String SHOW_FEATURE_PAGE = "ShowFeatures";
     public static final String TRAIN_PAGE = "TrainFunction";
     public static final String SHOW_RESULT_PAGE = "ShowModelInfo";
@@ -16,4 +17,5 @@ public class Const {
     public static final String BRIDGE_PAGE = "Bridge";
     public static final String TRACE_PAGE = "Trace";
     public static final String HOME_PAGE = "Home";
+    public static final String TOP_RELAYS_PAGE = "TopRelays";
 }

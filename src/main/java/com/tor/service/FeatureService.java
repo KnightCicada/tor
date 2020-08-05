@@ -29,6 +29,13 @@ public class FeatureService {
         showFeature(trainFilePath, traindeletePath, featureTxtPath);
     }
 
+    public void getMultiFeature(Feature feature) throws Exception {
+        String trainFilePath = feature.getTrainPath();
+        String traindeletePath = feature.getArffFilePath();
+        String featureTxtPath = feature.getFeatureTxtPath();
+        showMultiFeature(trainFilePath, traindeletePath, featureTxtPath);
+    }
+
     /**
      * 读取保存的模型信息
      *
@@ -51,6 +58,22 @@ public class FeatureService {
             e.printStackTrace();
         }
     }
+
+    public void showMultiFeature(String trainFilePath, String trainDelete, String featureTxtPath) throws Exception {
+        String selectFeatures;
+        try {
+            //下面是调用算法得到一个训练集的剩下的特征。 字符串。
+            selectFeatures = generateFeatures.getClassifyFeatureMulit(trainFilePath);
+            //将选择的特征存入文本文件.txt：一个训练集对应一个自己的文件名+Feature.txt文件。存在quic/model中。
+            algorithmUtil.saveFeatures(selectFeatures, featureTxtPath);
+            //对csv训练集保留选择的特征，删除多余的特征，并存储为.arff文件。一个训练集对应一个自己的文件名+Feature.arff文件。
+            arffUtil.deleteMulti(trainFilePath, selectFeatures, trainDelete);
+            log.info("FeatureService 特征提取成功结束");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void training(Train train) throws Exception {
         GenerateModel traingData = new GenerateModel();

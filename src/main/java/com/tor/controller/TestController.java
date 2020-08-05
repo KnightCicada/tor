@@ -5,19 +5,17 @@ import com.github.pagehelper.PageInfo;
 import com.tor.domain.Flow;
 import com.tor.domain.Model;
 import com.tor.domain.Packet;
-import com.tor.domain.ResultCal;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.service.ModelService;
-import com.tor.service.TestService;
 import com.tor.service.PacketService;
+import com.tor.service.TestService;
 import com.tor.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -92,30 +90,23 @@ public class TestController {
                 if ("TOR".equals(f.getLabel())) {
                     torNum++;
                 }
+                if ("6".equals(f.getProtocol())) {
+                    f.setProtocol("TCP");
+                } else if ("17".equals(f.getProtocol())) {
+                    f.setProtocol("UDP");
+                }
             }
 
-            ResultCal resultCal = new ResultCal();
-            resultCal.setTotalNum(totalNum);
-            resultCal.setTorNum(torNum);
-            resultCal.setNontorNum(totalNum - torNum);
+            int nontorNum = totalNum - torNum;
 
-            modelMap.addAttribute("resultCal", resultCal);
+            modelMap.addAttribute("torNum", torNum);
+            modelMap.addAttribute("nontorNum", nontorNum);
+            modelMap.addAttribute("totalNum", totalNum);
             modelMap.addAttribute("resultList", resultList);
             return Const.TEST_RESULT_PAGE;
         }
     }
 
-    //todo 无法删除文件
-    //删除文件
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-    public String deletePacket(@PathVariable Integer id, ModelMap modelMap) {
-        packetService.deleteTestPacket(id);
-        List<Packet> resList = packetService.findAllTestPacket();
-        PageInfo<Packet> pageList = new PageInfo<>(resList);
-        modelMap.addAttribute("data", resList);
-        modelMap.addAttribute("page", pageList);
-        return Const.TEST_PAGE;
-    }
 
     //todo 无法添加？
     @RequestMapping(value = "/addPacket")

@@ -60,7 +60,7 @@ public class PacketController {
     }
 
 
-    //根据名字对数据包进行模糊查询
+    //根据名字和类型对数据包进行模糊查询
     @RequestMapping(value = "/findPacketByName", method = RequestMethod.POST)
     public String findPacketByName(@RequestParam("word") String word, ModelMap modelMap) {
         List<Packet> res = packetService.findPacketByName(word);
@@ -68,9 +68,8 @@ public class PacketController {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
             return Const.PACKET_PAGE;
         } else {
-            List<Packet> packetList = res;
-            PageInfo<Packet> pageList = new PageInfo<>(packetList);
-            modelMap.addAttribute("data", packetList);
+            PageInfo<Packet> pageList = new PageInfo<>(res);
+            modelMap.addAttribute("data", res);
             modelMap.addAttribute("page", pageList);
             return Const.PACKET_PAGE;
         }
@@ -84,9 +83,8 @@ public class PacketController {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
             return Const.TEST_PACKET_PAGE;
         } else {
-            List<Packet> packetList = res;
-            PageInfo<Packet> pageList = new PageInfo<>(packetList);
-            modelMap.addAttribute("data", packetList);
+            PageInfo<Packet> pageList = new PageInfo<>(res);
+            modelMap.addAttribute("data", res);
             modelMap.addAttribute("page", pageList);
             return Const.TEST_PACKET_PAGE;
         }
@@ -108,7 +106,7 @@ public class PacketController {
         }
     }
 
-    //todo 删除之后返回展示界面
+
     //删除文件
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String deletePacket(@PathVariable Integer id, ModelMap modelMap) {
@@ -145,7 +143,7 @@ public class PacketController {
 //    @RequestMapping(method = RequestMethod.GET)
 //    public String getTestPacketList(ModelMap modelMap, @RequestParam(required = false, defaultValue = "1", value = "pn") Integer pn) {
 //        PageHelper.startPage(pn, 6);
-//        List<Packet> packetList = trainPacketService.findAllTestPacket();
+//        List<Packet> packetList = packetService.findAllTestPacket();
 //        PageInfo<Packet> pageList = new PageInfo<>(packetList);
 //        modelMap.addAttribute("data", packetList);
 //        modelMap.addAttribute("page", pageList);

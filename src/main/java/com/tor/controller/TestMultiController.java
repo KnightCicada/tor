@@ -8,7 +8,9 @@ import com.tor.domain.Packet;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;
-import com.tor.service.*;
+import com.tor.service.ModelService;
+import com.tor.service.PacketService;
+import com.tor.service.TestService;
 import com.tor.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +60,6 @@ public class TestMultiController {
     }
 
 
-    //todo 无法删除文件
     //删除文件
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String deletePacket(@PathVariable Integer id, ModelMap modelMap) {
@@ -147,7 +148,4 @@ public class TestMultiController {
     }
 
 
-    public static void main(String[] args) {
-        System.out.println(System.getProperty("java.library.path"));
-    }
 }

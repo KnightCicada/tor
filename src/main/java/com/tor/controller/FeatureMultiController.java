@@ -22,8 +22,8 @@ import java.util.List;
 
 @Controller
 @Slf4j
-@RequestMapping("/feature")
-public class FeatureController {
+@RequestMapping("/featureMulti")
+public class FeatureMultiController {
 
     AlgorithmUtil algorithmUtil = new AlgorithmUtil();
     @Autowired
@@ -42,14 +42,12 @@ public class FeatureController {
         map.addAttribute("Feature", packetList);
         PageInfo<Packet> pageList = new PageInfo<>(packetList);
         map.addAttribute("page", pageList);
-        return Const.FEATURE_PAGE;
+        return Const.FEATURE_MUTLI_PAGE;
     }
 
-    /*
-        trainFileName实际为得到的数据包对应的csv文件路径
-     */
-    @RequestMapping(value = "/getFeature")
-    public String feature(@RequestParam("trainFile") String trainFileName, ModelMap map) throws Exception {
+
+    @RequestMapping(value = "/getMultiFeature")
+    public String multiFeature(@RequestParam("trainFile") String trainFileName, ModelMap map) throws Exception {
         //对trainFileName进行处理，得到csv文件的名字
         String trainFileNameReplace = trainFileName.substring(trainFileName.lastIndexOf("/")).replace("/", "");
 
@@ -62,7 +60,7 @@ public class FeatureController {
         String featureTxtPath = PropertiesUtil.getFeature() + trainFileNameReplace.replace(".csv", "") + "Features" + ".txt";
         feature.setFeatureTxtPath(featureTxtPath);
 
-        featureService.getFeature(feature);//选择特征算法，得到降维版的csv训练集。
+        featureService.getMultiFeature(feature);//选择特征算法，得到降维版的csv训练集。
         String featureResult = algorithmUtil.readFeature(featureTxtPath);
         map.addAttribute("featureResultEn", featureResult.replace(",label", ""));
 

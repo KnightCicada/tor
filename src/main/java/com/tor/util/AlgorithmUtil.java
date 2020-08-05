@@ -241,10 +241,6 @@ public class AlgorithmUtil {
      * @throws Exception
      */
     private ArrayList<String> doClassify(String arffFilePath, String modelPath) throws Exception {
-
-        System.out.println("==="+ arffFilePath);
-        System.out.println("==="+ modelPath);
-
         ConverterUtils.DataSource sourceTest = null;
         sourceTest = new ConverterUtils.DataSource(arffFilePath);
         Instances test = sourceTest.getDataSet();
