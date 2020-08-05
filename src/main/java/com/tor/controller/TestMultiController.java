@@ -56,7 +56,7 @@ public class TestMultiController {
         map.addAttribute("packetList", packetList);
         PageInfo<Packet> packetPage = new PageInfo<>(packetList);
         map.addAttribute("packetPage", packetPage);
-        return Const.TESTMULTI_PAGE;
+        return Const.TEST_MULTI_PAGE;
     }
 
 
@@ -68,7 +68,7 @@ public class TestMultiController {
         PageInfo<Packet> pageList = new PageInfo<>(resList);
         modelMap.addAttribute("data", resList);
         modelMap.addAttribute("page", pageList);
-        return Const.TESTMULTI_PAGE;
+        return Const.TEST_MULTI_PAGE;
     }
 
     //todo 无法添加？
@@ -77,13 +77,13 @@ public class TestMultiController {
         try {
             if (file.isEmpty()) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-                return Const.TESTMULTI_PAGE;
+                return Const.TEST_MULTI_PAGE;
             }
             String filePcapName = file.getOriginalFilename();
             String suffixName = filePcapName.substring(filePcapName.lastIndexOf("."));
             if (!".pcap".equals(suffixName)) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.INVIVAD_FILE));
-                return Const.TESTMULTI_PAGE;
+                return Const.TEST_MULTI_PAGE;
             }
             //path为要保存的pcap地址拼接原始fileName
             String fullPcapName = PropertiesUtil.getPcapPath() + filePcapName;
@@ -113,7 +113,7 @@ public class TestMultiController {
         PageInfo<Packet> pageList = new PageInfo<>(packetList);
         modelMap.addAttribute("data", packetList);
         modelMap.addAttribute("page", pageList);
-        return Const.TESTMULTI_PAGE;
+        return Const.TEST_MULTI_PAGE;
     }
 
     /**
@@ -126,7 +126,7 @@ public class TestMultiController {
     public String testMulti(@RequestParam("testFile") String testCsvPath, @RequestParam("modelName") String modelname, ModelMap modelMap) throws Exception {
         if (testCsvPath == null) {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-            return Const.CLASSIFY_PAGE;
+            return Const.TEST_RESULT_MULTI_PAGE;
         }
         //对testCsvPath进行处理，得到测试文件名字
         String testFileName = testCsvPath.substring(testCsvPath.lastIndexOf("/")).replace("/", "");
@@ -135,15 +135,69 @@ public class TestMultiController {
 
         if (model == null) {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-            return Const.CLASSIFY_PAGE;
+            return Const.TEST_RESULT_MULTI_PAGE;
         } else {
             String modelPath = model.getModelPath();//.model
             String featurePath = model.getFeaturePath();//Feature.txt
 
             //调用测试算法，得到一个表，表示测试结果。
             List<Flow> resultList = testService.getModelClassifyListMulti(testFileName, testCsvPath, modelPath, featurePath);
+            int total = resultList.size();
+            int chat = 0;
+            int video = 0;
+            int voip = 0;
+            int p2p = 0;
+            int file = 0;
+            int mail = 0;
+            int browsing = 0;
+            int audio = 0;
+            for (Flow f : resultList) {
+                switch (f.getLabel()) {
+                    case "CHAT":
+                        chat++;
+                        break;
+                    case "VIDEO":
+                        video++;
+                        break;
+                    case "VOIP":
+                        voip++;
+                        break;
+                    case "P2P":
+                        p2p++;
+                        break;
+                    case "FILE-TRANSFER":
+                        file++;
+                        break;
+                    case "MAIL":
+                        mail++;
+                        break;
+                    case "BROWSING":
+                        browsing++;
+                        break;
+                    case "AUDIO":
+                        audio++;
+                        break;
+                    default:
+                }
+                if ("6".equals(f.getProtocol())) {
+                    f.setProtocol("TCP");
+                } else if ("17".equals(f.getProtocol())) {
+                    f.setProtocol("UDP");
+                }
+            }
+
+            modelMap.addAttribute("total", total);
+            modelMap.addAttribute("chat", chat);
+            modelMap.addAttribute("video", video);
+            modelMap.addAttribute("voip", voip);
+            modelMap.addAttribute("p2p", p2p);
+            modelMap.addAttribute("file", file);
+            modelMap.addAttribute("mail", mail);
+            modelMap.addAttribute("browsing", browsing);
+            modelMap.addAttribute("audio", audio);
+
             modelMap.addAttribute("resultList", resultList);
-            return Const.TEST_RESULT_PAGE;
+            return Const.TEST_RESULT_MULTI_PAGE;
         }
     }
 
