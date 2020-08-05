@@ -51,17 +51,19 @@ public class ClassifyController {
             String fullPcapName = PropertiesUtil.getPcapPath() + filePcapName;
             File fullPcapFile = new File(fullPcapName);
             //检测是否存在目标
-            if (!fullPcapFile.getParentFile().exists()) {
-                fullPcapFile.getParentFile().mkdirs();
-            }
-            //TODO 去数据库中查找，若重复，则直接返回结果
+
+//            if (!fullPcapFile.getParentFile().exists()) {
+//                fullPcapFile.getParentFile().mkdirs();
+//            }
+            //TODO 去数据库中查找，若重复，则直接返回结果odo MD5查看重复
             if (!fullPcapFile.exists()) {
                 file.transferTo(fullPcapFile);
                 result = classifyService.getClassifyResult(fullPcapName, filePcapName);
-            } else {
-                List<Flow> list = classifyService.getFlowListFromDB(filePcapName);
-                result = Result.success(list);
             }
+//            else {
+//                List<Flow> list = classifyService.getFlowListFromDB(filePcapName);
+//                result = Result.success(list);
+//            }
             int torSize = 0;
             if (result.getCode() == 1) {
                 List<Flow> flowList = result.getData();

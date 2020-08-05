@@ -6,14 +6,20 @@ import com.tor.domain.Flow;
 import com.tor.domain.Model;
 import com.tor.domain.Packet;
 import com.tor.result.CodeMsg;
+import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.util.AlgorithmUtil;
 import com.tor.util.ArffUtil;
 import com.tor.util.LabelUtil;
 import com.tor.util.PropertiesUtil;
+import iscx.cs.unb.ca.ifm.ISCXFlowMeter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +37,9 @@ public class ClassifyService {
     @Autowired
     private PacketService packetService;
 
+    @Autowired
+    private TestService testService;
+
 
     /**
      * 将pcap数据包转换为对应的csv，并将csv最后一列打标签为“？”，读取数据库中最新的训练好的模型，然后测试，返回测试结果
@@ -39,12 +48,11 @@ public class ClassifyService {
      * @param fileName     pcap数据包的单个名字，不带路径
      * @return
      */
-    public Result<List<Flow>> getClassifyResult(String fullPcapPath, String fileName) {
-        System.load(System.getProperty("user.dir") + "/lib/jnetpcap.dll");
+    public Result<List<Flow>> getClassifyResult(String fullPcapPath, String fileName) throws IOException {
         System.load(System.getProperty("user.dir") + "/lib/jnetpcap.so");
-//        if (!ISCXFlowMeter.singlePcap(fullPcapPath, PropertiesUtil.getPcapCsvPath())) {
-//            return Result.error(CodeMsg.TRANSFER_EXCEPT);
-//        }
+        if (!ISCXFlowMeter.singlePcap(fullPcapPath, PropertiesUtil.getPcapCsvPath())) {
+            return Result.error(CodeMsg.TRANSFER_EXCEPT);
+        }
         //打标签
         String fullCsvPath = PropertiesUtil.getPcapCsvPath() + "ISCX_" + fileName + ".csv";
         boolean flag = LabelUtil.singleCsvLabel(fullCsvPath, "test");
@@ -53,12 +61,15 @@ public class ClassifyService {
         if (model == null) {
             return Result.error(CodeMsg.NULL_MODEL);
         }
+
+
         String csvName = fileName + ".csv"; //csv的名字，例如tor1.pcap.csv
         String modelPath = model.getModelPath();//.model
         String featurePath = model.getFeaturePath();//Feature.txt
 
+        List<Flow> resultList = testService.getModelClassifyList(csvName, fullCsvPath, modelPath, featurePath);
         //调用测试算法，得到一个表，表示测试结果。
-        List<Flow> resultList = getModelClassifyList(csvName, fullCsvPath, modelPath, featurePath);
+//        List<Flow> resultList = getModelClassifyList(csvName, fullCsvPath, modelPath, featurePath);
 
         if (resultList == null || resultList.size() == 0) {
             return Result.error(CodeMsg.NULL_DATA);
@@ -67,9 +78,35 @@ public class ClassifyService {
 //            System.out.println(flow.toString());
 //        }
         //TODO 存数据库
+        //更新csv结果
+        updateFullCSV(fullCsvPath, resultList);
+
+//        //写入数据库
+//        if (resultList.size() > 0) {
+//            Packet packet = new Packet();
+//            packet.setPacketName(packetName);
+//            packet.setCsvPath(fullCsvFile);
+//            packet.setType("已判别Local");
+//            packet.setPacketPath(packetPath);
+//            if (packetService.insertPacket(packet) < 0) {
+//                log.error("数据包插入失败:{}", packet.toString());
+//            }
+//        }
+        System.out.println("测试成功结束！");
+
         return Result.success(resultList);
 
     }
+
+
+
+
+
+
+
+
+
+
 
     private List<Flow> getModelClassifyList(String csvFileName, String fullCsvFile, String modelPath, String featurePath) {
         AlgorithmUtil algorithmUtil = new AlgorithmUtil();
@@ -113,6 +150,9 @@ public class ClassifyService {
     }
 
     private void updateFullCSV(String fullCsvFile, ArrayList<String[]> csvList, ArrayList<String> classifyResult) throws IOException {
+
+
+
         CsvWriter writer = new CsvWriter(fullCsvFile, ',', StandardCharsets.UTF_8);
         String header = "Source IP,Source Port,Destination IP,Destination Port,Protocol,Flow Duration,Flow Bytes/s,Flow Packets/s,Flow IAT Mean,Flow IAT Std,Flow IAT Max,Flow IAT Min,Fwd IAT Mean,Fwd IAT Std,Fwd IAT Max,Fwd IAT Min,Bwd IAT Mean,Bwd IAT Std,Bwd IAT Max,Bwd IAT Min,Active Mean,Active Std,Active Max,Active Min,Idle Mean,Idle Std,Idle Max,Idle Min,label";
         String[] headers = header.split(",");
@@ -120,6 +160,26 @@ public class ClassifyService {
         for (int i = 0; i < csvList.size(); i++) {
             String[] strings = csvList.get(i);
             strings[strings.length - 1] = classifyResult.get(i);
+            writer.writeRecord(strings);
+        }
+        writer.close();
+    }
+
+    private void updateFullCSV(String fullCsvFile, List<Flow> classifyResult) throws IOException {
+        ArrayList<String[]> csvList = new ArrayList<String[]>();
+        CsvReader reader = new CsvReader(fullCsvFile, ',', StandardCharsets.UTF_8);
+        reader.readHeaders();//跳过表头。
+        while (reader.readRecord()) {
+            csvList.add(reader.getValues());
+        }
+        reader.close();//csvList中是除去表头的一个测试文件的全部内容。
+        CsvWriter writer = new CsvWriter(fullCsvFile, ',', StandardCharsets.UTF_8);
+        String header = "Source IP,Source Port,Destination IP,Destination Port,Protocol,Flow Duration,Flow Bytes/s,Flow Packets/s,Flow IAT Mean,Flow IAT Std,Flow IAT Max,Flow IAT Min,Fwd IAT Mean,Fwd IAT Std,Fwd IAT Max,Fwd IAT Min,Bwd IAT Mean,Bwd IAT Std,Bwd IAT Max,Bwd IAT Min,Active Mean,Active Std,Active Max,Active Min,Idle Mean,Idle Std,Idle Max,Idle Min,label";
+        String[] headers = header.split(",");
+        writer.writeRecord(headers);
+        for (int i = 0; i < classifyResult.size(); i++) {
+            String[] strings = csvList.get(i);
+            strings[strings.length - 1] = classifyResult.get(i) + "";
             writer.writeRecord(strings);
         }
         writer.close();
