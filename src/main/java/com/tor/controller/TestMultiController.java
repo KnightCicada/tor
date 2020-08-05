@@ -157,9 +157,9 @@ public class TestMultiController {
             modelMap.addAttribute("audio", multiNum.getAudio());
 
             modelMap.addAttribute("resultList", resultList);
+
             return Const.TEST_RESULT_MULTI_PAGE;
         }
     }
-
 
 }
