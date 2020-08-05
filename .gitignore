@@ -2,7 +2,7 @@ target/
 geolite2.mmdb
 
 *.class
-
+/.idea/**
 #package file
 *.war
 *.ear
