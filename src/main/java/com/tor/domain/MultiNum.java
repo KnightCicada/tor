@@ -1,14 +1,14 @@
 package com.tor.domain;
 
 public class MultiNum {
-    int chat = 0;
-    int video = 0;
-    int voip = 0;
-    int p2p = 0;
-    int file = 0;
-    int mail = 0;
-    int browsing = 0;
-    int audio = 0;
+    private int chat = 0;
+    private int video = 0;
+    private int voip = 0;
+    private int p2p = 0;
+    private int file = 0;
+    private int mail = 0;
+    private int browsing = 0;
+    private int audio = 0;
 
     public MultiNum(int chat, int video, int voip, int p2p, int file, int mail, int browsing, int audio) {
         this.chat = chat;
