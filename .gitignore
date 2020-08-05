@@ -25,3 +25,5 @@ geolite2.mmdb
 #system
 .DS_Store
 Thumbs.db
+
+*.properties
