@@ -144,6 +144,7 @@ public class TestMultiController {
 
             //调用测试算法，得到一个表，表示测试结果。
             List<Flow> resultList = testService.getModelClassifyListMulti(testFileName, testCsvPath, modelPath, featurePath);
+
             MultiNum multiNum = ProtocolLabel.protocolAndMultiNum(resultList);
 
             modelMap.addAttribute("total", resultList.size());
@@ -157,9 +158,9 @@ public class TestMultiController {
             modelMap.addAttribute("audio", multiNum.getAudio());
 
             modelMap.addAttribute("resultList", resultList);
+
             return Const.TEST_RESULT_MULTI_PAGE;
         }
     }
-
 
 }
