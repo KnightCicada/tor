@@ -48,6 +48,7 @@ public class ClassifyController {
             String suffixName = filePcapName.substring(filePcapName.lastIndexOf("."));
             if (!suffixName.equals(".pcap")) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.INVIVAD_FILE));
+                modelMap.addAttribute("show_table", false);
                 return "classify";
             }
             //path为要保存的pcap地址拼接原始fileName
@@ -66,7 +67,9 @@ public class ClassifyController {
             }
             int torSize = 0;
             if (result == null) {
-                modelMap.addAttribute("result", result);
+                modelMap.addAttribute("result", Result.error(CodeMsg.SERVER_ERROR));
+                modelMap.addAttribute("show_table", false);
+                return "classify";
             }
             if (result.getCode() == 1) {
                 List<Flow> flowList = result.getData();
