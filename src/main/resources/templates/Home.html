@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ch"
+>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>智能化流量识别与态势分析系统</title>
+    <style type="text/css">
+        body {
+            background-image: url("/assets/images/timg.jpg");
+            background-color: #cccccc;
+        }
+
+        table {
+            border-width: 1px;
+            border-color: #1d94ff;
+            border-style: solid solid solid solid;
+            -moz-border-radius: 20px;
+            -khtml-border-radius: 20px;
+            -webkit-border-radius: 20px;
+            border-radius: 20px;
+            padding: 1px;
+        }
+
+        .dev_re {
+            position: absolute;
+            left: 450px;
+            top: 120px;
+            width: 600px;
+            height: 450px;
+        }
+
+        .releation {
+            width: 600px;
+            height: 430px;
+            background-color: rgba(220, 220, 220, 0.1);
+        }
+
+        .pie {
+            position: absolute;
+            left: 50px;
+            top: 30px;
+            width: 360px;
+            height: 540px;
+        }
+
+        .modpie {
+            background-color: rgba(250, 250, 250, 0);
+            width: 360px;
+            height: 460px;
+        }
+
+        .brandpie {
+            background-color: rgba(250, 250, 250, 0);
+            width: 360px;
+            height: 260px;
+        }
+
+        .sankey {
+            position: absolute;
+            left: 1130px;
+            top: 50px;
+
+        }
+
+        .dev_sankey {
+            width: 380px;
+            height: 630px;
+            background-color: rgba(100, 149, 237, 0.1);
+        }
+
+        .ftitle {
+            background-color: rgba(220, 220, 220, 0.1);
+            color: white;
+        }
+
+        .time {
+            border-width: 3px;
+            border-color: #00FF00;
+            border-style: none;
+            position: absolute;
+            left: 1270px;
+            top: 10px;
+            width: 245px;
+            height: 60px;
+            background-color: rgba(220, 220, 220, 0);
+        }
+
+        .subtitle {
+            font-size: 40pt;
+            position: absolute;
+            left: 550px;
+            top: 20px;
+
+            text-shadow: -2px -2px #708090, 2px 2px #708090;
+            color: #FFFFF0;
+            font-weight: bold;
+
+            font-family: 华文仿宋;
+            height: 60px;
+
+
+        }
+
+        .file {
+            position: absolute;
+
+            left: 50px;
+            top: 620px;
+            width: 1000px;
+            height: 79px;
+            background-color: rgba(220, 220, 220, 0.2);
+        }
+
+        .txt {
+
+            width: 1000px;
+            height: 60px;
+            background-color: rgba(220, 220, 220, 0.8);
+        }
+
+        marquee {
+
+        }
+
+        a:link {
+            color: white;
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dev_re">
+    <center class="ftitle"><a href="/trace" target="_blank"
+                              title="点击可跳转到关联关系图页面">关联关系图</a></center>
+    <iframe class="releation" SRC="/trace" frameborder=0></iframe>
+</div>
+
+<div class="pie">
+    <center class="ftitle"><a href="/bridge" target="_blank"
+                              title="点击可跳转到网桥节点探测页面">网桥节点探测</a>
+                        <a href="http://10.170.50.58:8089/relay-country.html" target="_blank"
+                           title="点击可跳转到态势感知页面">态势感知</a>
+    </center>
+    <iframe class="modpie" SRC="/bridge" frameborder=0></iframe>
+    <!--        <iframe class="brandpie" SRC="/" frameborder=0></iframe>-->
+</div>
+
+
+<div class="sankey">
+    <center class="ftitle"><a href="/worldView" target="_blank"
+                              title="点击可跳转到中继节点全球分布页面">中继节点全球分布</a></center>
+    <iframe class="dev_sankey" SRC="/worldView" frameborder=0></iframe>
+</div>
+
+<iframe class="time" SRC="" frameborder=0></iframe>
+<span class="subtitle" style="text-align: center;display:block;">智能化流量识别与态势分析系统</span>
+<!--<span class="subtitle">智能化流量识别与态势分析系统</span>-->
+
+<div class="file">
+    <center class="ftitle"><a href="/top" target="_blank"
+                              title="点击可跳转到完整的设备信息页面">带宽前10的中继节点</a></center>
+    <!--
+    <iframe  class="txt" SRC="mac_match.txt" frameborder=0></iframe>
+    -->
+    <iframe class="txt" SRC="/top" frameborder=0></iframe>
+</div>
+
+
+</body>
+
+
+</html>
+ 

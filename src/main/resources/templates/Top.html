@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+
+    <title>带宽前10的中继信息</title>
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
+
+    <meta content="width=device-width, initial-scale=1.0 , shrink-to-fit=no" name="viewport">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/templatemo-style.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/owl.css}" type="text/css"/>
+
+</head>
+
+
+<body class="is-preload">
+
+<style>
+    .jump {
+        width: 5%;
+        height: 18px;
+    }
+</style>
+<!-- Wrapper -->
+<div id="wrapper">
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <!-- Header -->
+            <header id="header">
+                <div class="logo">
+                    <a href="">带宽前10的中继信息</a>
+                </div>
+            </header>
+            <div class="contentDiv">
+                <h5><strong><font size="5"></font><br/></strong></h5>
+                <div id="2" style="margin:10px">
+                    <div align="center">
+                        <!--                        <a class="btn btn-primary" href="/packet" role="button" style="margin-right:10px;">新增数据包信息</a>-->
+                        <form action="/top" enctype="multipart/form-data" method="post">
+
+                        </form>
+                    </div>
+                </div>
+                <table class="table table-striped table-hover table-bordered"
+                       style="table-layout: fixed; word-break:break-all; word-wrap:break-word;">
+                    <legend>
+                        <strong></strong>
+                    </legend>
+                    <thead>
+                    <tr>
+                        <th>节点名称</th>
+                        <th>国家代码</th>
+                        <th>带宽值KB/s</th>
+                        <th>在线时间/h</th>
+                        <th>Ip</th>
+                        <th>主机名</th>
+                        <th>使用平台</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="top :${Top}">
+                        <td style="width:120px;" th:text="${top.routerName}"></td>
+                        <td style="width:300px;" th:text="${top.countryCode}"></td>
+                        <td style="width:300px;" th:text="${top.bandwidth}"></td>
+                        <td style="width:300px;" th:text="${top.uptime}"></td>
+                        <td style="width:300px;" th:text="${top.ip}"></td>
+                        <td style="width:300px;" th:text="${top.hostname}"></td>
+                        <td style="width:300px;" th:text="${top.platform}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="inner">
+            <!-- Menu -->
+            <nav id="menu">
+                <ul>
+                    <li><a href="/index">抓包/index</a></li>
+                    <li><a href="/packet">数据包管理/packet</a></li>
+                    <li><a href="/feature">特征提取/feature</a></li>
+                    <li><a href="/train">训练模型/train</a></li>
+                    <li><a href="/model">模型管理/model</a></li>
+                    <li><a href="/test">使用模型分类/classify</a></li>
+                    <li><a href="/classify">使用最新模型分类/classify</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+</div>
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/transition.js"></script>
+<script src="assets/js/owl-carousel.js"></script>
+<script src="assets/js/custom.js"></script>
+
+</body>
+<script th:inline="javascript">
+    var result = [[${result}]];
+    if (JSON.stringify(result) !== '{}') {
+        if (result.code !== 1) {
+            layer.msg(result.msg);
+        }
+    }
+</script>
+</html>

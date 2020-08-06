@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:c="http://www.w3.org/1999/XSL/Transform" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>特征提取</title>
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/templatemo-style.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/owl.css}" type="text/css"/>
+
+</head>
+
+<body class="is-preload">
+
+<style>
+    .jump {
+        width: 5%;
+        height: 18px;
+    }
+
+    #editShare .button {
+        width: 200px;
+        height: 50px;
+        background: #c5464a;
+        color: #fff;
+    }
+
+    #editShare input {
+        margin: 0px 10px;
+        border: 2px solid #c5464a;
+        border-radius: 5px;
+        background: transparent;
+        text-align: center;
+        height: 50px;
+        width: calc(100% - 150px);
+        text-align-last: center;
+    }
+
+    #editShare select {
+        width: 450px;
+        margin: 0px 10px;
+        height: 50px;
+        text-align: center;
+        text-align-last: center;
+        border: 2px solid #c5464a;
+    }
+</style>
+
+<!-- Wrapper -->
+<div id="wrapper">
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <!-- Header -->
+            <header id="header">
+                <div class="logo">
+                    <a href=/feature">数据流量分析选择</a>
+                </div>
+            </header>
+            <form action="/feature/getFeature" id="editShare" method="post">
+                <div class="form-inline">
+                    <p><label class="title">特征选择算法：Infogain+Ranker</label></p>
+                </div>
+                <fieldset>
+                    <legend>
+                        <strong style="width: 100px">训练集数据列表</strong>
+                    </legend>
+                </fieldset>
+                <div class="btn-group" data-toggle="buttons">
+                    <table class="table table-striped table-hover table-bordered"
+                           style="table-layout: fixed; word-break:break-all; word-wrap:break-word;">
+                        <thead>
+                        <tr>
+                            <th>数据包名称</th>
+                            <th>本地地址</th>
+                            <th>数据类型</th>
+                            <th>数据包对应csv文件路径</th>
+                            <th>选择</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="feature :${Feature}">
+                            <td style="width:300px;" th:text="${feature.packetName}"></td>
+                            <td style="width:300px;" th:text="${feature.packetPath}"></td>
+                            <td style="width:120px;" th:text="${feature.type}"></td>
+                            <td style="width:120px;" th:text="${feature.csvPath}"></td>
+                            <td>
+                                <label class="btn btn-primary" style="width: 85px;height:30px"><input name="trainFile"
+                                                                                                      th:value="${feature.csvPath}"
+                                                                                                      type="radio">选择</label>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <a th:href="@{'/feature?pn='+${page.firstPage}}">首页</a>
+                <c:if test="${page.hasPreviousPage}"><a th:href="@{'/feature?pn='+${page.prePage}}">上一页</a></c:if>
+
+                <c:if test="${page.hasNextPage}"><a th:href="@{'/feature?pn='+${page.nextPage}}">下一页</a></c:if>
+
+                <a th:href="@{'/feature?pn='+${page.lastPage}}">最后页</a>
+                <p>
+                    <span>共</span>
+                    <span th:text="${page.pages}"></span>
+                    <span>页 --当前页是第</span>
+                    <span id="pagenow" th:text="${page.pageNum}"></span>
+                    <span>页 -- 共有</span>
+                    <span th:text="${page.total}"></span>
+                    <span>条数据</span>
+                    <span>-- 跳转到:
+                    <input class="jump" id="jump" type="text" value="1"/>页
+                    <a href="" onclick="getpn(this)">点击跳转</a>
+                    </span>
+                </p>
+
+                <p>
+                <div align="center">
+                    <input class="button" id="btnPost" style="width: 200px;height: 50px;background:#c5464a;color:#fff;"
+                           type="submit" value="提取特征"/></div>
+                </p>
+            </form>
+        </div>
+    </div>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="inner">
+            <!-- Menu -->
+            <nav id="menu">
+                <ul>
+                    <li><a href="/classify">流量包判别/classify</a></li>
+                    <li><a href="/index">抓包/index</a></li>
+                    <li><a href="/packet">数据包管理/home</a></li>
+                    <li><a href="/feature">提取特征/feature</a></li>
+                    <li><a href="/train">数据流量训练模型/train</a></li>
+                    <li><a href="/model">模型信息管理/model</a></li>
+                    <li><a href="/test">测试模型/test</a></li>
+                    <li><a href="/testMulti">多分类/multi</a></li>
+                    <li><a href="http://10.170.50.58:8089/relay-country.html">态势感知</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+</div>
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/transition.js"></script>
+<script src="assets/js/owl-carousel.js"></script>
+<script src="assets/js/custom.js"></script>
+</body>
+</html>
+

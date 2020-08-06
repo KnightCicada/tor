@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>特征提取结果</title>
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/templatemo-style.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/owl.css}" type="text/css"/>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/js/browser.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/js/breakpoints.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/js/transition.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/js/owl-carousel.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/js/custom.js}" type="text/javascript"></script>
+    <script th:src="@{/vendor/jquery/jquery.min.js}" type="text/javascript"></script>
+
+    <style>
+        .table thead tr {
+            display: block;
+        }
+
+        .table tbody {
+            display: inline-block;
+            height: 250px;
+            width: 100%;
+            overflow: auto;
+        }
+
+        .table th {
+            width: 10%;
+        }
+
+        .table td {
+            width: 8%;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var scrollbar = document.querySelector('.scrollbar');
+            var container = scrollbar.parentNode;
+            container.scrollbar = scrollbar;
+            container.ratio =
+                (container.scrollHeight - container.offsetHeight) / (container.offsetHeight - scrollbar.offsetHeight);
+            container.addEventListener('mousewheel', function (e) {
+                this.scrollTop += e.deltaY;
+                this.scrollbar.style.top = (this.scrollTop + this.scrollTop / this.ratio) + 'px';
+            });
+            container.addEventListener('mousedown', function (e) {
+                if (e.target === this.scrollbar) {
+                    this.prevY = e.pageY;
+                }
+            });
+            container.addEventListener('mouseup', function (e) {
+                this.prevY = null;
+            });
+            container.addEventListener('mousemove', function (e) {
+                if (this.prevY) {
+                    this.scrollTop += (e.pageY - this.prevY) * this.ratio;
+                    this.scrollbar.style.top = (this.scrollTop + this.scrollTop / this.ratio) + 'px';
+                    this.prevY = e.pageY;
+                }
+                e.preventDefault();
+            });
+        }
+    </script>
+</head>
+<body class="is-preload">
+<style>
+    #editShare .button {
+        width: 200px;
+        height: 50px;
+        background: #c5464a;
+        color: #fff;
+    }
+</style>
+<!-- Wrapper -->
+<div id="wrapper">
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <!-- Header -->
+            <header id="header">
+                <div class="logo">
+                    <a href="/feature">特征提取结果</a>
+                </div>
+            </header>
+
+            <fieldset>
+                <legend>
+                    <strong style="width: 100px">由特征选择算法选出的特征：</strong>
+                </legend>
+            </fieldset>
+            <div>
+                <textarea cols="100" id="featureResultEn" name="featureResultEn" rows="3"
+                          style="border: 2px solid #c5464a;" th:text="${featureResultEn}"></textarea>
+            </div>
+            <fieldset>
+                <legend>
+                    <strong style="width: 100px">特征解释：</strong>
+                </legend>
+            </fieldset>
+            <div>
+                <textarea cols="100" id="featureResultCh" name="featureResultCh" rows="3"
+                          style="border: 2px solid #c5464a;" th:text="${featureResultCh}"></textarea>
+            </div>
+            <div align="center" class="form-group">
+                <input class="button" onclick="history.back() "
+                       style="width: 200px;height: 50px;background:#c5464a;color:#fff;" type="submit"
+                       value="返回"/>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="inner">
+            <!-- Menu -->
+            <nav id="menu">
+                <ul>
+                    <li><a href="/classify">流量包判别/classify</a></li>
+                    <li><a href="/index">抓包/index</a></li>
+                    <li><a href="/packet">数据包管理/home</a></li>
+                    <li><a href="/feature">提取特征/feature</a></li>
+                    <li><a href="/train">数据流量训练模型/train</a></li>
+                    <li><a href="/model">模型信息管理/model</a></li>
+                    <li><a href="/test">测试模型/test</a></li>
+                    <li><a href="/testMulti">多分类/multi</a></li>
+                    <li><a href="http://10.170.50.58:8089/relay-country.html">态势感知</a></li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
