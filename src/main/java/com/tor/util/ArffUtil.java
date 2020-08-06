@@ -19,11 +19,10 @@ public class ArffUtil {
 
     /**
      * 将CSV文件转换成Arff文件
-     * @param filePath1：CSV文件路径
-     * @param filePath2：生成的arff存储路径和文件名
      *
-     * 特征没有加入源ip 目的ip 源端口 目的端口，和协议。是从下标为5的属性开始的。
-     * 进行二分类的文件头{TOR,NONTOR}
+     * @param filePath1：CSV文件路径
+     * @param filePath2：生成的arff存储路径和文件名 特征没有加入源ip 目的ip 源端口 目的端口，和协议。是从下标为5的属性开始的。
+     *                                  进行二分类的文件头{TOR,NONTOR}
      */
     public void csvToArff(String filePath1, String filePath2) {
         ArrayList<String> arrayList = new ArrayList<>();

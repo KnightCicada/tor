@@ -49,13 +49,13 @@ public class PacketController {
         List<Packet> res = packetService.findAllPacket();
         if (res == null) {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-            return Const.TEST_PACKET_PAGE;
+            return Const.TEST_PAGE;
         } else {
             List<Packet> packetList = packetService.findAllTestPacket();
             PageInfo<Packet> pageList = new PageInfo<>(packetList);
             modelMap.addAttribute("data", packetList);
             modelMap.addAttribute("page", pageList);
-            return Const.TEST_PACKET_PAGE;
+            return Const.TEST_PAGE;
         }
     }
 
@@ -81,12 +81,12 @@ public class PacketController {
         List<Packet> res = packetService.findTestPacketByName(packetName);
         if (res == null) {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-            return Const.TEST_PACKET_PAGE;
+            return Const.TEST_PAGE;
         } else {
             PageInfo<Packet> pageList = new PageInfo<>(res);
             modelMap.addAttribute("data", res);
             modelMap.addAttribute("page", pageList);
-            return Const.TEST_PACKET_PAGE;
+            return Const.TEST_PAGE;
         }
     }
 
@@ -126,7 +126,7 @@ public class PacketController {
         PageInfo<Packet> pageList = new PageInfo<>(resList);
         modelMap.addAttribute("data", resList);
         modelMap.addAttribute("page", pageList);
-        return Const.TEST_PACKET_PAGE;
+        return Const.TEST_PAGE;
     }
 
     //分页对数据包进行查询
@@ -205,13 +205,13 @@ public class PacketController {
         try {
             if (file.isEmpty()) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-                return Const.TEST_PACKET_PAGE;
+                return Const.TEST_PAGE;
             }
             String filePcapName = file.getOriginalFilename();
             String suffixName = filePcapName.substring(filePcapName.lastIndexOf("."));
             if (!".pcap".equals(suffixName)) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.INVIVAD_FILE));
-                return Const.TEST_PACKET_PAGE;
+                return Const.TEST_PAGE;
             }
             //path为要保存的pcap地址拼接原始fileName
             String fullPcapName = PropertiesUtil.getPcapPath() + filePcapName;
@@ -245,6 +245,6 @@ public class PacketController {
         PageInfo<Packet> pageList = new PageInfo<>(packetList);
         modelMap.addAttribute("data", packetList);
         modelMap.addAttribute("page", pageList);
-        return Const.TEST_PACKET_PAGE;
+        return Const.TEST_PAGE;
     }
 }

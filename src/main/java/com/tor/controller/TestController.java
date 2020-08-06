@@ -12,6 +12,7 @@ import com.tor.service.ModelService;
 import com.tor.service.PacketService;
 import com.tor.service.TestService;
 import com.tor.util.PropertiesUtil;
+import com.tor.util.ProtocolLabel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -86,22 +87,12 @@ public class TestController {
 
             int torNum = 0;
             int totalNum = resultList.size();
-            for (Flow f : resultList) {
-                if ("TOR".equals(f.getLabel())) {
-                    torNum++;
-                }
-                if ("6".equals(f.getProtocol())) {
-                    f.setProtocol("TCP");
-                } else if ("17".equals(f.getProtocol())) {
-                    f.setProtocol("UDP");
-                }
-            }
-
+            torNum = ProtocolLabel.protocolAndTorNum(resultList);
             int nontorNum = totalNum - torNum;
 
+            modelMap.addAttribute("totalNum", totalNum);
             modelMap.addAttribute("torNum", torNum);
             modelMap.addAttribute("nontorNum", nontorNum);
-            modelMap.addAttribute("totalNum", totalNum);
             modelMap.addAttribute("resultList", resultList);
             return Const.TEST_RESULT_PAGE;
         }
