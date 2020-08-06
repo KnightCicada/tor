@@ -55,5 +55,10 @@ public interface PacketDao {
     @Select("SELECT * FROM packet WHERE packetName like '%${value}%' and type = 'test'")
     List<Packet> findTestPacketByName(String packetName);
 
+    /*
+        md5
+     */
+    @Select("select * from packet where md5 = 'md5' ")
+    Packet getPacketByMd5(String md5);
 }
 

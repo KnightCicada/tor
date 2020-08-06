@@ -10,6 +10,7 @@ import com.tor.service.PacketService;
 import com.tor.util.PropertiesUtil;
 import iscx.cs.unb.ca.ifm.ISCXFlowMeter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -246,5 +250,13 @@ public class PacketController {
         modelMap.addAttribute("data", packetList);
         modelMap.addAttribute("page", pageList);
         return Const.TEST_PAGE;
+    }
+
+    public static void main(String[] args) throws IOException {
+        DigestUtils.getMd5Digest();
+        String s = DigestUtils.md5Hex(new FileInputStream(new File("/Users/dramatic/Downloads/tor.md")));
+        String s1 = DigestUtils.md5Hex(new FileInputStream(new File("/Users/dramatic/Downloads/tor的副本.md")));
+        System.out.println(s);
+        System.out.println(s1);
     }
 }
