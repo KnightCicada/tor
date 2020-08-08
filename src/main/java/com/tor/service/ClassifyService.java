@@ -7,15 +7,15 @@ import com.tor.domain.Model;
 import com.tor.domain.Packet;
 import com.tor.result.CodeMsg;
 import com.tor.result.Result;
-import com.tor.util.AlgorithmUtil;
-import com.tor.util.ArffUtil;
-import com.tor.util.LabelUtil;
-import com.tor.util.PropertiesUtil;
+import com.tor.util.*;
+import iscx.cs.unb.ca.ifm.ISCXFlowMeter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -31,6 +31,9 @@ public class ClassifyService {
     @Autowired
     private PacketService packetService;
 
+    @Autowired
+    private TestService testService;
+
 
     /**
      * 将pcap数据包转换为对应的csv，并将csv最后一列打标签为“？”，读取数据库中最新的训练好的模型，然后测试，返回测试结果
@@ -39,12 +42,11 @@ public class ClassifyService {
      * @param fileName     pcap数据包的单个名字，不带路径
      * @return
      */
-    public Result<List<Flow>> getClassifyResult(String fullPcapPath, String fileName) {
-        System.load(System.getProperty("user.dir") + "/lib/jnetpcap.dll");
+    public Result<List<Flow>> getClassifyResult(String fullPcapPath, String fileName) throws IOException {
         System.load(System.getProperty("user.dir") + "/lib/jnetpcap.so");
-//        if (!ISCXFlowMeter.singlePcap(fullPcapPath, PropertiesUtil.getPcapCsvPath())) {
-//            return Result.error(CodeMsg.TRANSFER_EXCEPT);
-//        }
+        if (!ISCXFlowMeter.singlePcap(fullPcapPath, PropertiesUtil.getPcapCsvPath())) {
+            return Result.error(CodeMsg.TRANSFER_EXCEPT);
+        }
         //打标签
         String fullCsvPath = PropertiesUtil.getPcapCsvPath() + "ISCX_" + fileName + ".csv";
         boolean flag = LabelUtil.singleCsvLabel(fullCsvPath, "test");
@@ -53,23 +55,37 @@ public class ClassifyService {
         if (model == null) {
             return Result.error(CodeMsg.NULL_MODEL);
         }
+
         String csvName = fileName + ".csv"; //csv的名字，例如tor1.pcap.csv
         String modelPath = model.getModelPath();//.model
         String featurePath = model.getFeaturePath();//Feature.txt
 
+        List<Flow> resultList = testService.getModelClassifyList(csvName, fullCsvPath, modelPath, featurePath);
         //调用测试算法，得到一个表，表示测试结果。
-        List<Flow> resultList = getModelClassifyList(csvName, fullCsvPath, modelPath, featurePath);
 
         if (resultList == null || resultList.size() == 0) {
             return Result.error(CodeMsg.NULL_DATA);
         }
-//        for (Flow flow : resultList) {
-//            System.out.println(flow.toString());
-//        }
-        //TODO 存数据库
+
+        //更新csv结果
+        UpdateResult.updateFullCSVTwoAu(fullCsvPath, resultList);
+        String fileMd5 = DigestUtils.md5Hex(new FileInputStream(fullPcapPath));
+        //写入数据库
+        if (resultList.size() > 0) {
+            Packet packet = new Packet();
+            packet.setPacketName(fileName);
+            packet.setCsvPath(fullCsvPath);
+            packet.setType("已判别Local");
+            packet.setMd5(fileMd5);
+            packet.setPacketPath(PropertiesUtil.getPcapPath());
+            if (packetService.insertPacket(packet) < 0) {
+                log.error("数据包插入失败:{}", packet.toString());
+            }
+        }
         return Result.success(resultList);
 
     }
+
 
     private List<Flow> getModelClassifyList(String csvFileName, String fullCsvFile, String modelPath, String featurePath) {
         AlgorithmUtil algorithmUtil = new AlgorithmUtil();
@@ -90,7 +106,7 @@ public class ClassifyService {
             //获取拼接好的结果
             display = arffUtil.attach(boundary, display, csvList, classifyResult);
             //更新csv
-            updateFullCSV(fullCsvFile, csvList, classifyResult);
+            UpdateResult.updateFullCSV(fullCsvFile, csvList, classifyResult);
             //TODO 插入数据库
             String packetName = fullCsvFile.substring(fullCsvFile.lastIndexOf("ISCX_") + 5, fullCsvFile.length() - 4);
             System.out.println(packetName);
@@ -112,20 +128,7 @@ public class ClassifyService {
         return display;
     }
 
-    private void updateFullCSV(String fullCsvFile, ArrayList<String[]> csvList, ArrayList<String> classifyResult) throws IOException {
-        CsvWriter writer = new CsvWriter(fullCsvFile, ',', StandardCharsets.UTF_8);
-        String header = "Source IP,Source Port,Destination IP,Destination Port,Protocol,Flow Duration,Flow Bytes/s,Flow Packets/s,Flow IAT Mean,Flow IAT Std,Flow IAT Max,Flow IAT Min,Fwd IAT Mean,Fwd IAT Std,Fwd IAT Max,Fwd IAT Min,Bwd IAT Mean,Bwd IAT Std,Bwd IAT Max,Bwd IAT Min,Active Mean,Active Std,Active Max,Active Min,Idle Mean,Idle Std,Idle Max,Idle Min,label";
-        String[] headers = header.split(",");
-        writer.writeRecord(headers);
-        for (int i = 0; i < csvList.size(); i++) {
-            String[] strings = csvList.get(i);
-            strings[strings.length - 1] = classifyResult.get(i);
-            writer.writeRecord(strings);
-        }
-        writer.close();
-    }
-
-    public List<Flow> getFlowListFromDB(String pcapFileName) {
+    public List<Flow> getFlowListFromFile(String pcapFileName) {
         List<Flow> list = new ArrayList<>();
         String csvFileName = PropertiesUtil.getPcapCsvPath() + "ISCX_" + pcapFileName + ".csv";
         File file = new File(csvFileName);
@@ -185,25 +188,5 @@ public class ClassifyService {
             ex.printStackTrace();
         }
         return list;
-    }
-
-    public static void main(String[] args) throws IOException {
-//        CsvReader reader = new CsvReader("D:/zyan/classifyData/ISCX_tor1.pcap.csv");
-//        System.out.println(Arrays.toString(reader.getHeaders()));
-//        reader.getValues();
-//        String[] header = reader.getHeaders();
-//        reader.close();
-//        CsvWriter writer = new CsvWriter("D:/zyan/classifyData/ISCX_tor1.pcap111111.csv",',',StandardCharsets.UTF_8);
-//        String string = "Source IP, Source Port, Destination IP, Destination Port, Protocol, Flow Duration, Flow Bytes/s, Flow Packets/s, Flow IAT Mean, Flow IAT Std, Flow IAT Max, Flow IAT Min,Fwd IAT Mean, Fwd IAT Std, Fwd IAT Max, Fwd IAT Min,Bwd IAT Mean, Bwd IAT Std, Bwd IAT Max, Bwd IAT Min,Active Mean, Active Std, Active Max, Active Min,Idle Mean, Idle Std, Idle Max, Idle Min,label\n";
-//        String[] header = string.split(", ");
-//        writer.writeRecord(header);
-//        String[] s = new String[]{"222","333","33"};
-//        writer.writeRecord(s);
-//        writer.close();
-        String csvFileName = "ISCX_tor1.pcap.csv";
-        String packetName = csvFileName.substring(csvFileName.lastIndexOf("ISCX_") + 5, csvFileName.length() - 4);
-        String packetPath = PropertiesUtil.getPcapPath() + packetName;
-        System.out.println(packetName);
-        System.out.println(packetPath);
     }
 }

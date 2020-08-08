@@ -77,12 +77,21 @@ public class FeatureService {
 
     public void training(Train train) throws Exception {
         GenerateModel traingData = new GenerateModel();
-        //开始机器学习算法
         traingData.showModel(train);
-        log.info("FeatureService 调用机器学习算法");
+        log.info("FeatureService二分类 调用机器学习算法");
         //训练得到一个模型
         Model newModel = traingData.getModel();
         modelService.insertModel(newModel);
         log.info("FeatureService 成功将模型信息插入数据库");
+    }
+
+    public void trainingMulti(Train train) throws Exception {
+        GenerateModel traingData = new GenerateModel();
+        traingData.showModel(train);
+        log.info("FeatureService多分类 调用机器学习算法");
+        //训练得到一个模型
+        Model newModel = traingData.getModel();
+        modelService.insertModel(newModel);
+        log.info("FeatureService 成功将多分类模型信息插入数据库");
     }
 }

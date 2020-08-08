@@ -6,7 +6,7 @@ public class Const {
     public static final String PACKET_PAGE = "PacketManagement";
     public static final String TRAIN_PAGE = "TrainFunction";
     public static final String TEST_PAGE = "TestFunction";
-    public static final String CLASSIFY_PAGE = "DirectClassifyFunction";
+    public static final String CLASSIFY_PAGE = "classify";
     public static final String WORLDVIEW_PAGE = "Worldview";
     public static final String BRIDGE_PAGE = "Bridge";
     public static final String TRACE_PAGE = "Trace";

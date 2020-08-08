@@ -59,6 +59,6 @@ public class PacketService {
 
     public boolean getPacketByMd5(String md5){
         Packet packet= packetDao.getPacketByMd5(md5);
-        return packet==null;
+        return !(packet==null);
     }
 }

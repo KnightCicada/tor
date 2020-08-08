@@ -8,9 +8,7 @@ import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.service.PacketService;
 import com.tor.util.PropertiesUtil;
-import iscx.cs.unb.ca.ifm.ISCXFlowMeter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,9 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -156,42 +151,50 @@ public class PacketController {
 
 
     @RequestMapping(value = "/addPacket")
-    public String addPacket(ModelMap modelMap, @RequestParam("file") MultipartFile file, @RequestParam("packet") String type) throws Exception {
+    public String addPacket(ModelMap modelMap, @RequestParam("file") MultipartFile file, @RequestParam("type") String type) throws Exception {
         try {
             if (file.isEmpty()) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
                 return Const.PACKET_PAGE;
             }
             String filePcapName = file.getOriginalFilename();
+
             String suffixName = filePcapName.substring(filePcapName.lastIndexOf("."));
             if (!".pcap".equals(suffixName)) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.INVIVAD_FILE));
                 return Const.PACKET_PAGE;
             }
             //path为要保存的pcap地址拼接原始fileName
-            String fullPcapName = PropertiesUtil.getPcapPath() + filePcapName;
-            File fullPcapFile = new File(fullPcapName);
+            String fullPcapPath = PropertiesUtil.getPcapPath() + filePcapName;
+            File fullPcapFile = new File(fullPcapPath);
+
+            System.out.println(fullPcapPath);
             //检测是否存在目标
-            if (!fullPcapFile.getParentFile().exists()) {
-                fullPcapFile.getParentFile().mkdirs();
-            }
-            //TODO pacp转换为csv文件 去掉.pcap，以.csv结尾
-            if (!fullPcapFile.exists()) {
+
+
+            String isExistFile = PropertiesUtil.getPcapPath() + filePcapName;
+            if (new File(isExistFile).exists()) {
+                Result.error(CodeMsg.DUPLICATE_FILE);
+            } else {
+                file.transferTo(fullPcapFile);
+                //TODO pacp转换为csv文件 去掉.pcap，以.csv结尾
                 String csvPath = PropertiesUtil.getPcapCsvPath() + filePcapName.replace(".pcap", ".csv");
-                System.out.println(1);
-                ISCXFlowMeter.singlePcap(filePcapName, csvPath);
-                System.out.println(2);
+//                if (!ISCXFlowMeter.singlePcap(fullPcapPath, PropertiesUtil.getPcapCsvPath())) {
+//                    throw new GlobalException(CodeMsg.TRANSFER_EXCEPT);
+//                }
+                String fullCsvPath = PropertiesUtil.getPcapCsvPath() + "ISCX_" + filePcapName + ".csv";
+//                if ( !LabelUtil.singleCsvLabel(fullCsvPath, type)) {
+//                    throw new GlobalException(CodeMsg.LABEL_ERROR);
+//                }
                 Packet packet = new Packet();
                 packet.setPacketName(filePcapName);
-                packet.setPacketPath(fullPcapName);
+                packet.setPacketPath(fullPcapPath);
                 packet.setType(type);
-                packet.setCsvPath(csvPath);
+                packet.setCsvPath(fullCsvPath);
                 packetService.insertPacket(packet);
                 file.transferTo(fullPcapFile);
-            } else {
 
             }
-
         } catch (Exception e) {
             log.error(e.toString());
         }
@@ -201,62 +204,5 @@ public class PacketController {
         modelMap.addAttribute("data", packetList);
         modelMap.addAttribute("page", pageList);
         return Const.PACKET_PAGE;
-    }
-
-
-    @RequestMapping(value = "/addTestPacket")
-    public String addTestPacket(ModelMap modelMap, @RequestParam("file") MultipartFile file, @RequestParam("packet") String type) throws Exception {
-        try {
-            if (file.isEmpty()) {
-                modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-                return Const.TEST_PAGE;
-            }
-            String filePcapName = file.getOriginalFilename();
-            String suffixName = filePcapName.substring(filePcapName.lastIndexOf("."));
-            if (!".pcap".equals(suffixName)) {
-                modelMap.addAttribute("result", Result.error(CodeMsg.INVIVAD_FILE));
-                return Const.TEST_PAGE;
-            }
-            //path为要保存的pcap地址拼接原始fileName
-            String fullPcapName = PropertiesUtil.getPcapPath() + filePcapName;
-            File fullPcapFile = new File(fullPcapName);
-            //检测是否存在目标
-            if (!fullPcapFile.getParentFile().exists()) {
-                fullPcapFile.getParentFile().mkdirs();
-            }
-            //TODO pacp转换为csv文件 去掉.pcap，以.csv结尾
-            if (!fullPcapFile.exists()) {
-                String csvPath = PropertiesUtil.getPcapCsvPath() + filePcapName.replace(".pcap", ".csv");
-                System.out.println(1);
-                ISCXFlowMeter.singlePcap(filePcapName, csvPath);
-                System.out.println(2);
-                Packet packet = new Packet();
-                packet.setPacketName(filePcapName);
-                packet.setPacketPath(fullPcapName);
-                packet.setType(type);
-                packet.setCsvPath(csvPath);
-                packetService.insertPacket(packet);
-                file.transferTo(fullPcapFile);
-            } else {
-
-            }
-
-        } catch (Exception e) {
-            log.error(e.toString());
-        }
-        //加入数据包之后，显示现有数据包
-        List<Packet> packetList = packetService.findAllTestPacketDesc();
-        PageInfo<Packet> pageList = new PageInfo<>(packetList);
-        modelMap.addAttribute("data", packetList);
-        modelMap.addAttribute("page", pageList);
-        return Const.TEST_PAGE;
-    }
-
-    public static void main(String[] args) throws IOException {
-        DigestUtils.getMd5Digest();
-        String s = DigestUtils.md5Hex(new FileInputStream(new File("/Users/dramatic/Downloads/tor.md")));
-        String s1 = DigestUtils.md5Hex(new FileInputStream(new File("/Users/dramatic/Downloads/tor的副本.md")));
-        System.out.println(s);
-        System.out.println(s1);
     }
 }

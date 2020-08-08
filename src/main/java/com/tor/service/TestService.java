@@ -4,6 +4,7 @@ import com.csvreader.CsvReader;
 import com.tor.domain.Flow;
 import com.tor.util.AlgorithmUtil;
 import com.tor.util.ArffUtil;
+import com.tor.util.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +39,9 @@ public class TestService {
             }
             reader.close();//csvList中是除去表头的一个测试文件的全部内容。
             int boundary = csvList.size();
-            ArrayList<String> classifyResult = new ArrayList<String>();
-            classifyResult = algorithmUtil.useModelclassify(testname, testPath, modelPath, featurePath);//只是很多行数据的最后一列。
+            ArrayList<String> classifyResult = algorithmUtil.useModelclassify(testname, testPath, modelPath, featurePath);//只是很多行数据的最后一列。
+            //更新csv
+            UpdateResult.updateFullCSV(csvFilePath, csvList, classifyResult);
             display = arffUtil.attach(boundary, display, csvList, classifyResult);
             log.info("测试成功结束！");
         } catch (Exception ex) {
@@ -62,8 +64,8 @@ public class TestService {
             }
             reader.close();//csvList中是除去表头的一个测试文件的全部内容。
             int boundary = csvList.size();
-            ArrayList<String> classifyResult = new ArrayList<String>();
-            classifyResult = algorithmUtil.useModelclassifyMulti(testname, testPath, modelPath, featurePath);
+            ArrayList<String> classifyResult = algorithmUtil.useModelclassifyMulti(testname, testPath, modelPath, featurePath);
+            UpdateResult.updateFullCSV(csvFilePath, csvList, classifyResult);
             display = arffUtil.attach(boundary, display, csvList, classifyResult);
             log.info("分类完成");
         } catch (Exception ex) {

@@ -9,7 +9,7 @@ public class PropertiesUtil {
 
     static {
         try {
-            InputStream in = DBUtil.class.getClassLoader().getResourceAsStream("filepath.properties");
+            InputStream in = DBUtil.class.getClassLoader().getResourceAsStream("application.properties");
             props = new Properties();
             props.load(in);
             in.close();

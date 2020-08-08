@@ -12,7 +12,9 @@ public class CodeMsg {
     public static CodeMsg NULL_DATA = new CodeMsg(500200, "未读取到数据，请稍后刷新！");
     public static CodeMsg INVIVAD_FILE = new CodeMsg(500201, "数据包后缀必须为\".pcap\"！");
     public static CodeMsg TRANSFER_EXCEPT = new CodeMsg(500202, "PCAP转换为CSV异常！");
+    public static CodeMsg LABEL_ERROR = new CodeMsg(500202, "pcap转换遇到问题！");
     public static CodeMsg NULL_MODEL = new CodeMsg(500203, "数据库中没有模型，无法判别！");
+    public static CodeMsg DUPLICATE_FILE = new CodeMsg(500204, "文件已经存在！");
     private int code;
     private String msg;
 

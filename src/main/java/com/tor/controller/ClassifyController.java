@@ -2,9 +2,12 @@ package com.tor.controller;
 
 import com.tor.domain.Flow;
 import com.tor.result.CodeMsg;
+import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.service.ClassifyService;
+import com.tor.service.PacketService;
 import com.tor.util.PropertiesUtil;
+import com.tor.util.ProtocolLabel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,11 +26,13 @@ public class ClassifyController {
 
     @Autowired
     private ClassifyService classifyService;
+    @Autowired
+    private PacketService packetService;
 
     @RequestMapping(value = "/classify")
     public String classify(ModelMap modelMap) {
         modelMap.addAttribute("show_table", false);
-        return "classify";
+        return Const.CLASSIFY_PAGE;
     }
 
 
@@ -38,38 +43,38 @@ public class ClassifyController {
         try {
             if (file.isEmpty()) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-                return "classify";
+                return Const.CLASSIFY_PAGE;
             }
             String filePcapName = file.getOriginalFilename();
             //TODO 文件名
             String suffixName = filePcapName.substring(filePcapName.lastIndexOf("."));
             if (!suffixName.equals(".pcap")) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.INVIVAD_FILE));
-                return "classify";
+                modelMap.addAttribute("show_table", false);
+                return Const.CLASSIFY_PAGE;
             }
             //path为要保存的pcap地址拼接原始fileName
             String fullPcapName = PropertiesUtil.getPcapPath() + filePcapName;
             File fullPcapFile = new File(fullPcapName);
             //检测是否存在目标
-            if (!fullPcapFile.getParentFile().exists()) {
-                fullPcapFile.getParentFile().mkdirs();
-            }
-            //TODO 去数据库中查找，若重复，则直接返回结果
-            if (!fullPcapFile.exists()) {
+            //TODO 去数据库中查找，若重复，则直接返回结果odo MD5查看重复
+            String isExistFile = PropertiesUtil.getPcapPath() + filePcapName;
+            if (!new File(isExistFile).exists()) {
                 file.transferTo(fullPcapFile);
                 result = classifyService.getClassifyResult(fullPcapName, filePcapName);
             } else {
-                List<Flow> list = classifyService.getFlowListFromDB(filePcapName);
+                List<Flow> list = classifyService.getFlowListFromFile(filePcapName);
                 result = Result.success(list);
             }
             int torSize = 0;
+            if (result == null) {
+                modelMap.addAttribute("result", Result.error(CodeMsg.SERVER_ERROR));
+                modelMap.addAttribute("show_table", false);
+                return Const.CLASSIFY_PAGE;
+            }
             if (result.getCode() == 1) {
                 List<Flow> flowList = result.getData();
-                for (Flow flow : flowList) {
-                    if (flow.getLabel().equals("TOR")) {
-                        torSize++;
-                    }
-                }
+                torSize = ProtocolLabel.protocolAndTorNum(flowList);
             }
             System.out.println("result.size: " + result.getData().size());
             System.out.println("tor.size: " + torSize);
@@ -81,6 +86,6 @@ public class ClassifyController {
         }
         System.out.println("文件上传2");
         modelMap.addAttribute("show_table", true);
-        return "classify";
+        return Const.CLASSIFY_PAGE;
     }
 }

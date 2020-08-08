@@ -114,7 +114,7 @@ public class GrabPacketsService {
         JSch jsch = new JSch();
         Session session = jsch.getSession(PropertiesUtil.getRemoteRootName(), PropertiesUtil.getremoteIP(), 22);
 
-        ProxyHTTP proxyHTTP= new  ProxyHTTP(PropertiesUtil.getHttpProxy(),PropertiesUtil.getHttpProxyPort());
+        ProxyHTTP proxyHTTP = new ProxyHTTP(PropertiesUtil.getHttpProxy(), PropertiesUtil.getHttpProxyPort());
         session.setProxy(proxyHTTP);
 
         session.setPassword(PropertiesUtil.getRemoteRootPassword()); // 设置密码
@@ -136,11 +136,15 @@ public class GrabPacketsService {
         while (true) {
             while (in.available() > 0) {
                 int i = in.read(tmp, 0, 1024);
-                if (i < 0) break;
+                if (i < 0) {
+                    break;
+                }
                 System.out.print(new String(tmp, 0, i));
             }
             if (channel.isClosed()) {
-                if (in.available() > 0) continue;
+                if (in.available() > 0) {
+                    continue;
+                }
                 System.out.println("exit-status: " + channel.getExitStatus());
                 break;
             }
@@ -160,12 +164,6 @@ public class GrabPacketsService {
         log.info("end execute channel sftp!");
         channel.disconnect();
         session.disconnect();
-    }
-
-    public static void main(String[] args) {
-        if (ISCXFlowMeter.singlePcap("/usr/dramatic/personal/data/12.pcap","./") ){
-            log.info("grabPackets：数据包转换成功");
-        }
     }
 }
 

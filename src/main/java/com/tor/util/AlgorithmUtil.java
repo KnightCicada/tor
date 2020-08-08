@@ -32,8 +32,7 @@ public class AlgorithmUtil {
      * @throws Exception
      */
     public void saveFeatures(String features, String feature_txt) {
-        File f = null;
-        f = new File(feature_txt);
+        File f = new File(feature_txt);
         FileWriter fw;
         try {
             fw = new FileWriter(f);

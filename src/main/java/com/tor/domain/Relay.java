@@ -1,7 +1,10 @@
 package com.tor.domain;
 
+import java.util.Date;
+
 public class Relay {
     private int id;
+    private Date relayDate;
     private String routerName;
     private String countryCode;
     private int bandwidth;
@@ -9,6 +12,14 @@ public class Relay {
     private String ip;
     private String hostname;
     private String platform;
+
+    public Date getRelayDate() {
+        return relayDate;
+    }
+
+    public void setRelayDate(Date relayDate) {
+        this.relayDate = relayDate;
+    }
 
     public int getId() {
         return id;
@@ -76,8 +87,9 @@ public class Relay {
 
     @Override
     public String toString() {
-        return "Init{" +
+        return "Relay{" +
                 "id=" + id +
+                ", relayDate='" + relayDate + '\'' +
                 ", routerName='" + routerName + '\'' +
                 ", countryCode='" + countryCode + '\'' +
                 ", bandwidth=" + bandwidth +

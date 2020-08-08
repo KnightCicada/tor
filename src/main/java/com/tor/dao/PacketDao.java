@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public interface PacketDao {
 
-    @Insert("insert into packet (packetName,packetPath,type,csvPath) values(#{packetName},#{packetPath},#{type},#{csvPath})")
+    @Insert("insert into packet (packetName,packetPath,type,csvPath,md5) values(#{packetName},#{packetPath},#{type},#{csvPath},#{md5})")
     int insertPacket(Packet packet);
 
     /*
