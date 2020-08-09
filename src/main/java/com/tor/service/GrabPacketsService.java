@@ -2,6 +2,8 @@ package com.tor.service;
 
 import com.jcraft.jsch.*;
 import com.tor.domain.Packet;
+import com.tor.exception.GlobalException;
+import com.tor.result.CodeMsg;
 import com.tor.util.LabelUtil;
 import com.tor.util.MyUserInfo;
 import com.tor.util.PropertiesUtil;
@@ -47,6 +49,8 @@ public class GrabPacketsService {
             }
             if (ISCXFlowMeter.singlePcap(PropertiesUtil.getRemoteToLocalPath() + fileName, PropertiesUtil.getPcapCsvPath())) {
                 log.info("grabPackets：数据包转换成功");
+            } else {
+                log.info("grabPackets：数据包转换失败");
             }
             String csvFullPath = PropertiesUtil.getPcapCsvPath() + "ISCX_" + fileName + ".csv";
             LabelUtil.singleCsvLabel(csvFullPath, "train"); //训练集打标签
@@ -60,8 +64,9 @@ public class GrabPacketsService {
         } else { //本地抓包
             if (isOSLinux()) {
                 grabPacketsLocalLinux(fileName, cmd, packetCount, protocol, selectWay);
-            } else { //TODO Windows下待处理
-                log.info("windows 待处理");
+            } else {
+                log.info("windows 平台无法捕获数据包");
+                throw new GlobalException(CodeMsg.WINDOWS_ERROR);
             }
         }
     }
@@ -76,11 +81,16 @@ public class GrabPacketsService {
         }
         log.info("grabPackets：构造的cmd命令:{}", command);
         LabelUtil.execute(command); //执行命令
+        if (ISCXFlowMeter.singlePcap(fullFile, PropertiesUtil.getPcapCsvPath())) {
+            log.info("grabPackets local：数据包转换成功");
+        } else {
+            log.info("grabPackets local：数据包转换失败");
+        }
         String csvFullPath = PropertiesUtil.getPcapCsvPath() + "ISCX_" + fileName + ".csv";
         LabelUtil.singleCsvLabel(csvFullPath, "test"); //测试集打标签
         Packet packet = new Packet();
         packet.setPacketName(fileName);
-        packet.setType("local");
+        packet.setType("test");
         packet.setPacketPath(PropertiesUtil.getPcapPath() + fileName);
         packet.setCsvPath(csvFullPath);
         int row = testPacketService.insertPacket(packet);

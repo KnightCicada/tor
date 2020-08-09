@@ -1,7 +1,6 @@
 package com.tor.service;
 
 import com.csvreader.CsvReader;
-import com.csvreader.CsvWriter;
 import com.tor.domain.Flow;
 import com.tor.domain.Model;
 import com.tor.domain.Packet;
@@ -75,7 +74,7 @@ public class ClassifyService {
             Packet packet = new Packet();
             packet.setPacketName(fileName);
             packet.setCsvPath(fullCsvPath);
-            packet.setType("已判别Local");
+            packet.setType("已判别test");
             packet.setMd5(fileMd5);
             packet.setPacketPath(PropertiesUtil.getPcapPath());
             if (packetService.insertPacket(packet) < 0) {

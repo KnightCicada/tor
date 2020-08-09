@@ -46,7 +46,6 @@ public class ClassifyController {
                 return Const.CLASSIFY_PAGE;
             }
             String filePcapName = file.getOriginalFilename();
-            //TODO 文件名
             String suffixName = filePcapName.substring(filePcapName.lastIndexOf("."));
             if (!suffixName.equals(".pcap")) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.INVIVAD_FILE));
@@ -57,7 +56,6 @@ public class ClassifyController {
             String fullPcapName = PropertiesUtil.getPcapPath() + filePcapName;
             File fullPcapFile = new File(fullPcapName);
             //检测是否存在目标
-            //TODO 去数据库中查找，若重复，则直接返回结果odo MD5查看重复
             String isExistFile = PropertiesUtil.getPcapPath() + filePcapName;
             if (!new File(isExistFile).exists()) {
                 file.transferTo(fullPcapFile);

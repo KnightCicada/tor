@@ -15,6 +15,7 @@ public class CodeMsg {
     public static CodeMsg LABEL_ERROR = new CodeMsg(500202, "pcap转换遇到问题！");
     public static CodeMsg NULL_MODEL = new CodeMsg(500203, "数据库中没有模型，无法判别！");
     public static CodeMsg DUPLICATE_FILE = new CodeMsg(500204, "文件已经存在！");
+    public static CodeMsg WINDOWS_ERROR = new CodeMsg(500204, "除Linux平台外无法捕获数据包！");
     private int code;
     private String msg;
 

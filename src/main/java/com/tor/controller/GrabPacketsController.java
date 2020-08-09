@@ -3,6 +3,7 @@ package com.tor.controller;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import com.tor.service.GrabPacketsService;
+import com.tor.util.LabelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,13 +23,15 @@ public class GrabPacketsController {
     @Autowired
     private GrabPacketsService grabPacketsService;
 
-    public static void main(String[] args) throws IOException, JSchException, SftpException {
-//        connect111();
-    }
 
     @RequestMapping(value = "/index")
-    public String index(ModelMap modelMap) throws InterruptedException {
-        return "Index";
+    public String index(ModelMap modelMap){
+        return "classify";
+    }
+
+    @RequestMapping(value = "/grab")
+    public String grab(ModelMap modelMap){
+        return "grabpacket";
     }
 
     @RequestMapping(value = "/grab_packets")
@@ -49,17 +52,23 @@ public class GrabPacketsController {
         } else {
             fileName = "serverPcap_" + time + ".pcap";
         }
-//        String  grabPlace = "server";
-//        String cmd;
-//        int packetCount;
-//        String protocol;
-//        int selectWay = 0;
         log.info("grab_packets:参数为：grabPlace：{}，command：{}，packetCount:{},protocol:{},selectWay:{}", grabPlace, command, packetCount, protocol, selectWay);
         grabPacketsService.grabPackets(fileName, grabPlace, command, packetCount, protocol, selectWay);
         response.setContentType("text/html;charset=utf-8");
         response.getWriter().write("<script>alert('正在抓包，抓包成功之后将存入数据库，数据包名称为：" + fileName + "！网页将跳转到抓包页面');  window.location='index';</script>");
         response.getWriter().flush();
-        return "Index";
+        return "grabpacket";
+    }
+
+
+    public static void main(String[] args) throws InterruptedException {
+//        if (ISCXFlowMeter.singlePcap("/home/zyan/AW/data/pcap/remote/" + "serverPcap_2020-08-09+11-11-49.pcap", "/home/zyan/AW/data/pcap/remote/")) {
+//            log.info("grabPackets：数据包转换成功");
+//        } else {
+//            log.info("grabPackets：数据包转换失败");
+//        }
+//        Thread.sleep(2000);
+        LabelUtil.singleCsvLabel("/home/zyan/AW/data/pcap/remote/ISCX_serverPcap_2020-08-09+11-11-49.pcap.csv", "train"); //训练集打标签
     }
 
 }

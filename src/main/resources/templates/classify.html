@@ -2,7 +2,7 @@
 <html lang="cn" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
-    <title>测试结果展示</title>
+    <title>分类结果展示</title>
     <link th:href="@{/css/default.css}" rel="stylesheet"/>
     <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
     <link th:href="@{/bootstrap/css/bootstrap.css}" rel="stylesheet"/>
@@ -101,7 +101,7 @@
             <!-- Header -->
             <header id="header">
                 <div class="logo">
-                    <a href="/classify">分类结果展示</a>
+                    <a href="/classify">暗网流量识别</a>
                 </div>
             </header>
 
@@ -118,7 +118,7 @@
             <div th:if="${show_table} eq true ">
                 <fieldset>
                     <legend>
-                        <strong style="width: 100px">测试结果表示</strong>
+                        <strong style="width: 100px">二分类分类结果表示</strong>
                     </legend>
                 </fieldset>
                 <div class="button">
@@ -151,6 +151,41 @@
                 </div>
             </div>
 
+            <div th:if="${show_table} eq true ">
+                <fieldset>
+                    <legend>
+                        <strong style="width: 100px">多分类结果表示</strong>
+                    </legend>
+                </fieldset>
+                <div class="button">
+                    <p>总流量数目：<span th:text="${total}"></span></p>
+                    <p>TOR流量数目：<span th:text="${tor_size}"></span></p>
+                </div>
+                <div class="btn-group" data-toggle="buttons">
+                    <table class="table table-hover table-condensed" style="table-layout: fixed">
+                        <thead>
+                        <tr align="center">
+                            <th>源IP</th>
+                            <th>源port</th>
+                            <th>目的IP</th>
+                            <th>目的port</th>
+                            <th>协议</th>
+                            <th>是否为Tor</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="flow : ${result1.data}">
+                            <td style="width:200px;" th:text="${flow.srcIP}"></td>
+                            <td style="width:200px;" th:text="${flow.srcPort}"></td>
+                            <td style="width:200px;" th:text="${flow.dstIP}"></td>
+                            <td style="width:200px;" th:text="${flow.dstPort}"></td>
+                            <td style="width:200px;" th:text="${flow.protocol}"></td>
+                            <td style="width:200px;" th:text="${flow.label}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -180,9 +215,6 @@
 
 <script th:inline="javascript">
     var result = [[${result}]];
-
-    alert(result)
-    layer.msg(result);
     if(JSON.stringify(result) !== '{}'){
         if (result.code !== 1) {
             layer.msg(result.msg);
