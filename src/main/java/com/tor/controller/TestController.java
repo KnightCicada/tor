@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tor.domain.Flow;
 import com.tor.domain.Model;
+import com.tor.domain.MultiNum;
 import com.tor.domain.Packet;
+import com.tor.exception.GlobalException;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -43,17 +44,14 @@ public class TestController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String findAll(ModelMap map, @RequestParam(required = false, defaultValue = "1", value = "pn") Integer pn, @RequestParam(required = false, defaultValue = "1", value = "pn1") Integer pn1) {
-        List<Model> modelList = new LinkedList<>();
-        List<Packet> packetList = new LinkedList<>();
-
         PageHelper.startPage(pn1, 6);
-        modelList = modelService.findAllModel();
+        List<Model> modelList = modelService.findAllModelNoMul();
         map.addAttribute("modelList", modelList);
         PageInfo<Model> modelPage = new PageInfo<>(modelList);
         map.addAttribute("modelPage", modelPage);
 
         PageHelper.startPage(pn, 6);
-        packetList = packetService.findAllTestPacket();
+        List<Packet> packetList = packetService.findAllTestPacket();
         map.addAttribute("packetList", packetList);
         PageInfo<Packet> packetPage = new PageInfo<>(packetList);
         map.addAttribute("packetPage", packetPage);
@@ -84,11 +82,40 @@ public class TestController {
             String featurePath = model.getFeaturePath();//Feature.txt
             //调用测试算法，得到一个表，表示测试结果。
             List<Flow> resultList = testService.getModelClassifyList(testFileName, testCsvPath, modelPath, featurePath);
-
+            try {
+                Packet packet = packetService.findPacketByExactPath(testCsvPath);
+                packet.setType("已判别test");
+                packetService.updateType(packet);
+            } catch (Exception e){
+                log.info(e.getMessage());
+            }
             int torNum = 0;
             int totalNum = resultList.size();
             torNum = ProtocolLabel.protocolAndTorNum(resultList);
             int nontorNum = totalNum - torNum;
+
+
+            model = modelService.findExactModelByName("multiRandomForest.model");
+            String multimodelPath = model.getModelPath();//.model
+            String multiFeaturePath = model.getFeaturePath();//Feature.txt
+            String multiFileName = "multiTmp" + testFileName;
+            String multiFilePath = PropertiesUtil.getPcapCsvPath()+ multiFileName;
+            //调用测试算法，得到一个表，表示测试结果。
+            List<Flow> multiResultList = testService.getModelClassifyListMulti(multiFileName, multiFilePath, multimodelPath, multiFeaturePath);
+            MultiNum multiNum = ProtocolLabel.protocolAndMultiNum(multiResultList);
+
+            modelMap.addAttribute("Multitotal", multiResultList.size());
+            modelMap.addAttribute("chat", multiNum.getChat());
+            modelMap.addAttribute("video", multiNum.getVideo());
+            modelMap.addAttribute("voip", multiNum.getVoip());
+            modelMap.addAttribute("p2p", multiNum.getP2p());
+            modelMap.addAttribute("file", multiNum.getFile());
+            modelMap.addAttribute("mail", multiNum.getMail());
+            modelMap.addAttribute("browsing", multiNum.getBrowsing());
+            modelMap.addAttribute("audio", multiNum.getAudio());
+            modelMap.addAttribute("resultList", resultList);
+            modelMap.addAttribute("multiResultList", multiResultList);
+
 
             modelMap.addAttribute("totalNum", totalNum);
             modelMap.addAttribute("torNum", torNum);
@@ -96,52 +123,6 @@ public class TestController {
             modelMap.addAttribute("resultList", resultList);
             return Const.TEST_RESULT_PAGE;
         }
-    }
-
-
-    //todo 无法添加？
-    @RequestMapping(value = "/addPacket")
-    public String addPacket(ModelMap modelMap, @RequestParam("file") MultipartFile file, @RequestParam("packet") String type) throws Exception {
-        try {
-            if (file.isEmpty()) {
-                modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-                return Const.TEST_PAGE;
-            }
-            String filePcapName = file.getOriginalFilename();
-            String suffixName = filePcapName.substring(filePcapName.lastIndexOf("."));
-            if (!".pcap".equals(suffixName)) {
-                modelMap.addAttribute("result", Result.error(CodeMsg.INVIVAD_FILE));
-                return Const.TEST_PAGE;
-            }
-            //path为要保存的pcap地址拼接原始fileName
-            String fullPcapName = PropertiesUtil.getPcapPath() + filePcapName;
-            File fullPcapFile = new File(fullPcapName);
-            //检测是否存在目标
-            if (!fullPcapFile.getParentFile().exists()) {
-                fullPcapFile.getParentFile().mkdirs();
-            }
-            //TODO pacp转换为csv文件 去掉.pcap，以.csv结尾
-            if (!fullPcapFile.exists()) {
-                Packet packet = new Packet();
-                packet.setPacketName(filePcapName);
-                packet.setPacketPath(fullPcapName);
-                packet.setType(type);
-                packet.setCsvPath(PropertiesUtil.getPcapCsvPath() + filePcapName.replace(".pcap", ""));
-                packetService.insertPacket(packet);
-                file.transferTo(fullPcapFile);
-            } else {
-
-            }
-
-        } catch (Exception e) {
-            log.error(e.toString());
-        }
-        //加入数据包之后，显示现有数据包
-        List<Packet> packetList = packetService.findAllTestPacketDesc();
-        PageInfo<Packet> pageList = new PageInfo<>(packetList);
-        modelMap.addAttribute("data", packetList);
-        modelMap.addAttribute("page", pageList);
-        return Const.TEST_PAGE;
     }
 
     /**

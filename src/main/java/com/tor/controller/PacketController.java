@@ -3,11 +3,15 @@ package com.tor.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tor.domain.Packet;
+import com.tor.exception.GlobalException;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.service.PacketService;
+import com.tor.util.DeleteUtil;
+import com.tor.util.LabelUtil;
 import com.tor.util.PropertiesUtil;
+import iscx.cs.unb.ca.ifm.ISCXFlowMeter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -60,9 +64,9 @@ public class PacketController {
 
 
     //根据名字和类型对数据包进行模糊查询
-    @RequestMapping(value = "/findPacketByName", method = RequestMethod.POST)
-    public String findPacketByName(@RequestParam("word") String word, ModelMap modelMap) {
-        List<Packet> res = packetService.findPacketByName(word);
+    @RequestMapping(value = "/findPacketByKeyword", method = RequestMethod.POST)
+    public String findPacketByKeyword(@RequestParam("word") String word, ModelMap modelMap) {
+        List<Packet> res = packetService.findPacketByKeyword(word);
         if (res == null) {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
             return Const.PACKET_PAGE;
@@ -109,6 +113,10 @@ public class PacketController {
     //删除文件
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String deletePacket(@PathVariable Integer id, ModelMap modelMap) {
+        boolean res = DeleteUtil.deletePacket(packetService.findPacketById(id));
+        if (!res) {
+            throw new GlobalException(CodeMsg.DELETE_FILE_ERROR);
+        }
         packetService.deletePacket(id);
         List<Packet> resList = packetService.findAllPacket();
         PageInfo<Packet> pageList = new PageInfo<>(resList);
@@ -117,16 +125,6 @@ public class PacketController {
         return Const.PACKET_PAGE;
     }
 
-    //删除文件
-    @RequestMapping(value = "/deleteTest/{id}", method = RequestMethod.GET)
-    public String deleteTesetPacket(@PathVariable Integer id, ModelMap modelMap) {
-        packetService.deletePacket(id);
-        List<Packet> resList = packetService.findAllTestPacket();
-        PageInfo<Packet> pageList = new PageInfo<>(resList);
-        modelMap.addAttribute("data", resList);
-        modelMap.addAttribute("page", pageList);
-        return Const.TEST_PAGE;
-    }
 
     //分页对数据包进行查询
     @RequestMapping(method = RequestMethod.GET)
@@ -174,18 +172,16 @@ public class PacketController {
 
             String isExistFile = PropertiesUtil.getPcapPath() + filePcapName;
             if (new File(isExistFile).exists()) {
-                Result.error(CodeMsg.DUPLICATE_FILE);
+                throw new GlobalException(CodeMsg.DUPLICATE_FILE);
             } else {
                 file.transferTo(fullPcapFile);
-                //TODO pacp转换为csv文件 去掉.pcap，以.csv结尾
-                String csvPath = PropertiesUtil.getPcapCsvPath() + filePcapName.replace(".pcap", ".csv");
-//                if (!ISCXFlowMeter.singlePcap(fullPcapPath, PropertiesUtil.getPcapCsvPath())) {
-//                    throw new GlobalException(CodeMsg.TRANSFER_EXCEPT);
-//                }
+                if (!ISCXFlowMeter.singlePcap(fullPcapPath, PropertiesUtil.getPcapCsvPath())) {
+                    throw new GlobalException(CodeMsg.TRANSFER_EXCEPT);
+                }
                 String fullCsvPath = PropertiesUtil.getPcapCsvPath() + "ISCX_" + filePcapName + ".csv";
-//                if ( !LabelUtil.singleCsvLabel(fullCsvPath, type)) {
-//                    throw new GlobalException(CodeMsg.LABEL_ERROR);
-//                }
+                if ( !LabelUtil.singleCsvLabel(fullCsvPath, type)) {
+                    throw new GlobalException(CodeMsg.LABEL_ERROR);
+                }
                 Packet packet = new Packet();
                 packet.setPacketName(filePcapName);
                 packet.setPacketPath(fullPcapPath);

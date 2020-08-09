@@ -1,5 +1,7 @@
 package com.tor.domain;
 
+import java.util.ArrayList;
+
 public class Flow {
     //源IP
     private String srcIP;
@@ -369,5 +371,47 @@ public class Flow {
                 ", idleMin='" + idleMin + '\'' +
                 ", label='" + label + '\'' +
                 '}';
+    }
+
+    public String[]toStringArray(Flow f){
+        ArrayList<String> res=new ArrayList<>();
+        res.add(f.getSrcIP());
+        res.add(f.getSrcPort());
+        res.add(f.getDstIP());
+        res.add(f.getDstPort());
+        res.add(f.getProtocol());
+        res.add(f.getDuration());
+
+        res.add(f.getFlowBytsPsec());
+        res.add(f.getFlowPktsPsec());
+
+        res.add(f.getFlowIATMean());
+        res.add(f.getFlowIATStd());
+        res.add(f.getFlowIATMax());
+        res.add(f.getFlowIATMin());
+
+        res.add(f.getFwdIATMean());
+        res.add(f.getFwdIATStd());
+        res.add(f.getFwdIATMax());
+        res.add(f.getFwdIATMin());
+
+        res.add(f.getBwdIATMean());
+        res.add(f.getBwdIATStd());
+        res.add(f.getBwdIATMax());
+        res.add(f.getBwdIATMin());
+
+        res.add(f.getActiveMean());
+        res.add(f.getActiveStd());
+        res.add(f.getActiveMax());
+        res.add(f.getActiveMin());
+
+        res.add(f.getIdleMean());
+        res.add(f.getIdleStd());
+        res.add(f.getIdleMax());
+        res.add(f.getIdleMin());
+
+        res.add("?");
+
+        return res.toArray(new String[0]);
     }
 }

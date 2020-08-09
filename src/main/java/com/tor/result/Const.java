@@ -16,6 +16,7 @@ public class Const {
     public static final String FEATURE_MUTLI_PAGE = "FeatureMulti";
     public static final String TEST_MULTI_PAGE = "TestFunctionMulti";
     public static final String TEST_RESULT_MULTI_PAGE = "ShowTestResultMulti";
+    public static final String MULTI_DIR_PAGE = "MultiDir";
     //features
     public static final String FEATURE_PAGE = "Feature";
     //show

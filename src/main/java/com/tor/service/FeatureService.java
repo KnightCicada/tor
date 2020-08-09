@@ -81,8 +81,12 @@ public class FeatureService {
         log.info("FeatureService二分类 调用机器学习算法");
         //训练得到一个模型
         Model newModel = traingData.getModel();
-        modelService.insertModel(newModel);
-        log.info("FeatureService 成功将模型信息插入数据库");
+        try {
+            modelService.insertModel(newModel);
+            log.info("FeatureService 成功将模型信息插入数据库");
+        } catch (Exception e){
+            log.info(e.getMessage());
+        }
     }
 
     public void trainingMulti(Train train) throws Exception {

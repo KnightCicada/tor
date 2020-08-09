@@ -1,6 +1,7 @@
 package com.tor.dao;
 
 import com.tor.domain.Model;
+import com.tor.domain.Packet;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,9 @@ public interface ModelDao {
     @Select("select * from model")
     List<Model> findAllModel();
 
+    @Select("select * from model where modelName != 'multiRandomForest.model'")
+    List<Model> findAllModelNoMul();
+
     @Select("select * from model ORDER BY id DESC")
     List<Model> findAllModelDesc();
 
@@ -25,14 +29,17 @@ public interface ModelDao {
     int deleteModel(Integer id);
 
     @Select("SELECT * FROM model WHERE modelName like '%${value}%'")
-    List<Model> findModelByName(String modelName);
+    List<Model> findModelByKeyword(String keyword);
 
-    @Select("SELECT * FROM model WHERE modelName=#{modelName}")
+    @Select("SELECT * FROM model WHERE modelName=#{modelName} LIMIT 1")
     Model findExactModelByName(String modelName);
 
-    @Select("select * from model ORDER BY id DESC LIMIT 1")
+    @Select("select * from model where modelName = 'train(9039)RandomForest.model' ")
     Model findLastModel();
 
     @Select("select * from model ORDER BY id DESC LIMIT 5")
     List<Model> showModel();
+
+    @Select("select * from model WHERE id=#{id}")
+    Model findModelById(Integer id);
 }

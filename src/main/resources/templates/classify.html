@@ -118,7 +118,7 @@
             <div th:if="${show_table} eq true ">
                 <fieldset>
                     <legend>
-                        <strong style="width: 100px">测试结果表示</strong>
+                        <strong style="width: 100px">二分类结果展示</strong>
                     </legend>
                 </fieldset>
                 <div class="button">
@@ -149,6 +149,49 @@
                         </tbody>
                     </table>
                 </div>
+                <br><br><br><br><br><br>
+                <fieldset>
+                    <legend>
+                        <strong style="width: 100px">多分类结果统计</strong>
+                        <div class="button">
+                            <p>多分类流量总数：<span th:text="${Multitotal}"></span></p>
+                            <p>Chat流量总数：<span th:text="${chat}"></span></p>
+                            <p>Video流量总数：<span th:text="${video}"></span></p>
+                            <p>Voip流量总数：<span th:text="${voip}"></span></p>
+                            <p>P2p流量总数：<span th:text="${p2p}"></span></p>
+                            <p>File-transfer流量总数：<span th:text="${file}"></span></p>
+                            <p>Mail流量总数：<span th:text="${mail}"></span></p>
+                            <p>Browsing流量总数：<span th:text="${browsing}"></span></p>
+                            <p>Audio流量总数：<span th:text="${audio}"></span></p>
+                        </div>
+                    </legend>
+                </fieldset>
+
+
+                <div class="btn-group" data-toggle="buttons">
+                    <table class="table table-hover table-condensed" style="table-layout: fixed">
+                        <thead>
+                        <tr align="center">
+                            <th>源IP</th>
+                            <th>源port</th>
+                            <th>目的IP</th>
+                            <th>目的port</th>
+                            <th>协议</th>
+                            <th>分类结果</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="result : ${multiResultList}">
+                            <td style="width:200px;" th:text="${result.getSrcIP()}"></td>
+                            <td style="width:200px;" th:text="${result.getSrcPort()}"></td>
+                            <td style="width:200px;" th:text="${result.getDstIP()}"></td>
+                            <td style="width:200px;" th:text="${result.getDstPort()}"></td>
+                            <td style="width:200px;" th:text="${result.getProtocol()}"></td>
+                            <td style="width:200px;" th:text="${result.getLabel()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
 
@@ -163,8 +206,8 @@
             <nav id="menu">
                 <ul>
                     <li><a href="classify">流量包判别/classify</a></li>
-                    <li><a href="index">抓包/index</a></li>
-                    <li><a href="home">数据包管理/home</a></li>
+                    <li><a href="grab">抓包/index</a></li>
+                    <li><a href="/packet">数据包管理/home</a></li>
                     <li><a href="feature">提取特征/feature</a></li>
                     <li><a href="train">数据流量训练模型/train</a></li>
                     <li><a href="model">模型信息管理/model</a></li>
@@ -180,9 +223,6 @@
 
 <script th:inline="javascript">
     var result = [[${result}]];
-
-    alert(result)
-    layer.msg(result);
     if(JSON.stringify(result) !== '{}'){
         if (result.code !== 1) {
             layer.msg(result.msg);

@@ -1,11 +1,16 @@
 package com.tor.controller;
 
 import com.tor.domain.Flow;
+import com.tor.domain.Model;
+import com.tor.domain.MultiNum;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.service.ClassifyService;
+import com.tor.service.ModelService;
 import com.tor.service.PacketService;
+import com.tor.service.TestService;
+import com.tor.util.CsvUtil;
 import com.tor.util.PropertiesUtil;
 import com.tor.util.ProtocolLabel;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +32,9 @@ public class ClassifyController {
     @Autowired
     private ClassifyService classifyService;
     @Autowired
-    private PacketService packetService;
+    private ModelService modelService;
+    @Autowired
+    private TestService testService;
 
     @RequestMapping(value = "/classify")
     public String classify(ModelMap modelMap) {
@@ -46,7 +53,6 @@ public class ClassifyController {
                 return Const.CLASSIFY_PAGE;
             }
             String filePcapName = file.getOriginalFilename();
-            //TODO 文件名
             String suffixName = filePcapName.substring(filePcapName.lastIndexOf("."));
             if (!suffixName.equals(".pcap")) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.INVIVAD_FILE));
@@ -57,7 +63,6 @@ public class ClassifyController {
             String fullPcapName = PropertiesUtil.getPcapPath() + filePcapName;
             File fullPcapFile = new File(fullPcapName);
             //检测是否存在目标
-            //TODO 去数据库中查找，若重复，则直接返回结果odo MD5查看重复
             String isExistFile = PropertiesUtil.getPcapPath() + filePcapName;
             if (!new File(isExistFile).exists()) {
                 file.transferTo(fullPcapFile);
@@ -72,10 +77,34 @@ public class ClassifyController {
                 modelMap.addAttribute("show_table", false);
                 return Const.CLASSIFY_PAGE;
             }
+
             if (result.getCode() == 1) {
                 List<Flow> flowList = result.getData();
                 torSize = ProtocolLabel.protocolAndTorNum(flowList);
             }
+
+            Model model = modelService.findExactModelByName("multiRandomForest.model");
+            String multimodelPath = model.getModelPath();//.model
+            String multiFeaturePath = model.getFeaturePath();//Feature.txt
+            String testFileName = filePcapName + ".csv";
+            String multiFileName = "multiTmp" + testFileName;
+            String multiFilePath = PropertiesUtil.getPcapCsvPath() + multiFileName;
+
+            //调用测试算法，得到一个表，表示测试结果。
+            List<Flow> multiResultList = testService.getModelClassifyListMulti(multiFileName, multiFilePath, multimodelPath, multiFeaturePath);
+            MultiNum multiNum = ProtocolLabel.protocolAndMultiNum(multiResultList);
+
+            modelMap.addAttribute("Multitotal", multiResultList.size());
+            modelMap.addAttribute("chat", multiNum.getChat());
+            modelMap.addAttribute("video", multiNum.getVideo());
+            modelMap.addAttribute("voip", multiNum.getVoip());
+            modelMap.addAttribute("p2p", multiNum.getP2p());
+            modelMap.addAttribute("file", multiNum.getFile());
+            modelMap.addAttribute("mail", multiNum.getMail());
+            modelMap.addAttribute("browsing", multiNum.getBrowsing());
+            modelMap.addAttribute("audio", multiNum.getAudio());
+            modelMap.addAttribute("multiResultList", multiResultList);
+
             System.out.println("result.size: " + result.getData().size());
             System.out.println("tor.size: " + torSize);
             modelMap.addAttribute("total", result.getData().size());

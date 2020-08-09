@@ -48,7 +48,7 @@ public class TestMultiController {
         List<Packet> packetList = new LinkedList<>();
 
         PageHelper.startPage(pn1, 6);
-        modelList = modelService.findAllModel();
+        modelList = modelService.findAllModelNoMul();
         map.addAttribute("modelList", modelList);
         PageInfo<Model> modelPage = new PageInfo<>(modelList);
         map.addAttribute("modelPage", modelPage);
@@ -161,5 +161,41 @@ public class TestMultiController {
         }
     }
 
+    @RequestMapping(value = "/multiResultDir", method = RequestMethod.GET)
+    public String testMultiDir(@RequestParam("testFile") String testCsvPath, ModelMap modelMap) throws Exception {
+        if (testCsvPath == null) {
+            modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
+            return Const.TEST_RESULT_MULTI_PAGE;
+        }
+        //对testCsvPath进行处理，得到测试文件名字
+        String testFileName = testCsvPath.substring(testCsvPath.lastIndexOf("/")).replace("/", "");
+        //选取提供的多分类模型
+        model = modelService.findExactModelByName("multiRandomForest.model");
+
+        if (model == null) {
+            modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
+            return Const.TEST_RESULT_MULTI_PAGE;
+        } else {
+            String modelPath = model.getModelPath();//.model
+            String featurePath = model.getFeaturePath();//Feature.txt
+
+            //调用测试算法，得到一个表，表示测试结果。
+            List<Flow> resultList = testService.getModelClassifyListMulti(testFileName, testCsvPath, modelPath, featurePath);
+            MultiNum multiNum = ProtocolLabel.protocolAndMultiNum(resultList);
+
+            modelMap.addAttribute("total", resultList.size());
+            modelMap.addAttribute("chat", multiNum.getChat());
+            modelMap.addAttribute("video", multiNum.getVideo());
+            modelMap.addAttribute("voip", multiNum.getVoip());
+            modelMap.addAttribute("p2p", multiNum.getP2p());
+            modelMap.addAttribute("file", multiNum.getFile());
+            modelMap.addAttribute("mail", multiNum.getMail());
+            modelMap.addAttribute("browsing", multiNum.getBrowsing());
+            modelMap.addAttribute("audio", multiNum.getAudio());
+
+            modelMap.addAttribute("resultList", resultList);
+            return Const.TEST_RESULT_MULTI_PAGE;
+        }
+    }
 
 }

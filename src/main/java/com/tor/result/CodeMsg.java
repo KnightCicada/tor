@@ -15,6 +15,12 @@ public class CodeMsg {
     public static CodeMsg LABEL_ERROR = new CodeMsg(500202, "pcap转换遇到问题！");
     public static CodeMsg NULL_MODEL = new CodeMsg(500203, "数据库中没有模型，无法判别！");
     public static CodeMsg DUPLICATE_FILE = new CodeMsg(500204, "文件已经存在！");
+    public static CodeMsg FILE_NOT_EXIST = new CodeMsg(500205, "文件不存在！");
+    public static CodeMsg DELETE_FILE_ERROR = new CodeMsg(500205, "文件删除失败！");
+    public static final CodeMsg DELETE_MODEL_ERROR = new CodeMsg(500206, "删除模型失败");
+    public static final CodeMsg WINDOWS_ERROR = new CodeMsg(500206, "windows平台无法抓包");
+
+
     private int code;
     private String msg;
 

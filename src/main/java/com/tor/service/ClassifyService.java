@@ -1,7 +1,6 @@
 package com.tor.service;
 
 import com.csvreader.CsvReader;
-import com.csvreader.CsvWriter;
 import com.tor.domain.Flow;
 import com.tor.domain.Model;
 import com.tor.domain.Packet;
@@ -68,22 +67,21 @@ public class ClassifyService {
         }
 
         //更新csv结果
-        UpdateResult.updateFullCSVTwoAu(fullCsvPath, resultList);
-        String fileMd5 = DigestUtils.md5Hex(new FileInputStream(fullPcapPath));
+        CsvUtil.updateFullCSVTwoAu(fullCsvPath, resultList);
         //写入数据库
         if (resultList.size() > 0) {
             Packet packet = new Packet();
             packet.setPacketName(fileName);
             packet.setCsvPath(fullCsvPath);
-            packet.setType("已判别Local");
-            packet.setMd5(fileMd5);
+            packet.setType("已判别test");
             packet.setPacketPath(PropertiesUtil.getPcapPath());
             if (packetService.insertPacket(packet) < 0) {
-                log.error("数据包插入失败:{}", packet.toString());
+                log.info("数据包插入失败:{}", packet.toString());
+            } else {
+                log.info("数据包插入成功:{}", packet.toString());
             }
         }
         return Result.success(resultList);
-
     }
 
 
@@ -106,8 +104,7 @@ public class ClassifyService {
             //获取拼接好的结果
             display = arffUtil.attach(boundary, display, csvList, classifyResult);
             //更新csv
-            UpdateResult.updateFullCSV(fullCsvFile, csvList, classifyResult);
-            //TODO 插入数据库
+            CsvUtil.updateFullCSV(fullCsvFile, csvList, classifyResult);
             String packetName = fullCsvFile.substring(fullCsvFile.lastIndexOf("ISCX_") + 5, fullCsvFile.length() - 4);
             System.out.println(packetName);
             String packetPath = PropertiesUtil.getPcapPath() + packetName;

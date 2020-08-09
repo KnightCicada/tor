@@ -3,6 +3,7 @@ package com.tor.service;
 
 import com.tor.dao.ModelDao;
 import com.tor.domain.Model;
+import com.tor.domain.Packet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,20 +22,21 @@ public class ModelService {
         return modelDao.findAllModel();
     }
 
+    public List<Model> findAllModelNoMul() {
+        return modelDao.findAllModelNoMul();
+    }
+
     public List<Model> findAllModelDesc() {
         return modelDao.findAllModelDesc();
     }
 
-    public int updateModel(Model model) {
-        return modelDao.updateModel(model);
-    }
 
     public int deleteModel(Integer id) {
         return modelDao.deleteModel(id);
     }
 
-    public List<Model> findModelByName(String modelName) {
-        return modelDao.findModelByName(modelName);
+    public List<Model> findModelByKeyword(String modelName) {
+        return modelDao.findModelByKeyword(modelName);
     }
 
     public Model findExactModelByName(String modelName) {
@@ -43,5 +45,9 @@ public class ModelService {
 
     public Model findLastModel() {
         return modelDao.findLastModel();
+    }
+
+    public Model findModelById(Integer id) {
+        return modelDao.findModelById(id);
     }
 }

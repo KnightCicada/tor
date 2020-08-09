@@ -205,7 +205,6 @@ public class ArffUtil {
      */
     public void delete(String filePath, String features, String newFilePath) {
         String[] feature = features.split(",");
-//        System.out.println(feature.length);
         List<Flow> flowList = new ArrayList<Flow>();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("@relation ").append(new File(newFilePath).getName()).append(System.lineSeparator()).append(System.lineSeparator());

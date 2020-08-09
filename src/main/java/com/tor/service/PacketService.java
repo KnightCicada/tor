@@ -17,7 +17,7 @@ public class PacketService {
     }
 
     public List<Packet> findAllPacket() {
-        return packetDao.findAllPacket();
+        return packetDao.findAllPacketDesc();
     }
 
     public List<Packet> findAllPacketDesc() {
@@ -28,10 +28,13 @@ public class PacketService {
         return packetDao.deletePacket(id);
     }
 
-    public List<Packet> findPacketByName(String word) {
-        return packetDao.findPacketByName(word);
+    public List<Packet> findPacketByKeyword(String word) {
+        return packetDao.findPacketByKeyword(word);
     }
 
+    public Packet findPacketByExactPath(String path) {
+        return packetDao.findPacketByExactPath(path);
+    }
 
     public List<Packet> findPacketByType(String type) {
         return packetDao.findPacketByType(type);
@@ -57,8 +60,16 @@ public class PacketService {
         return packetDao.findAllTrainPacket();
     }
 
-    public boolean getPacketByMd5(String md5){
-        Packet packet= packetDao.getPacketByMd5(md5);
-        return !(packet==null);
+    public boolean getPacketByMd5(String md5) {
+        Packet packet = packetDao.getPacketByMd5(md5);
+        return !(packet == null);
+    }
+
+    public Packet findPacketById(Integer id) {
+        return packetDao.findPacketById(id);
+    }
+
+    public boolean updateType(Packet packet) {
+        return packetDao.updateType(packet);
     }
 }

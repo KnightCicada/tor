@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>使用最新模型进行分类</title>
+    <title>使用已有模型进行多分类</title>
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/default.css}"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
@@ -42,12 +42,12 @@
             <!-- Header -->
             <header id="header">
                 <div class="logo">
-                    <a href="/test">测试与展示</a>
+                    <a href="/testMulti">测试与展示</a>
                 </div>
             </header>
 
 
-            <form action="/classify/result">
+            <form action="/multiDir/multiResultDir">
                 <fieldset>
                     <legend>
                         <strong> 请选择测试文件:</strong>
@@ -56,7 +56,7 @@
                 <div id="2" style="margin:10px">
                     <div align="center">
                         <!--                        <a class="btn btn-primary" href="/packet" role="button" style="margin-right:10px;">新增数据包信息</a>-->
-                        <form action="/test/addPacket" enctype="multipart/form-data" method="post">
+                        <form action="/multiDir/addPacket" enctype="multipart/form-data" method="post">
                             <p>
                                 <label class="title">
                                     新增测试数据包
@@ -77,7 +77,6 @@
                             <th>数据类型</th>
                             <th>数据包对应csv文件路径</th>
                             <th>选择</th>
-                            <th>删除</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -90,20 +89,20 @@
                                 <label class="btn btn-primary"><input name="testFile" th:value="${packet.csvPath}"
                                                                       type="radio">选择</label>
                             </td>
-                            <td><a class="btn btn-danger"
-                                   th:href="@{/test/delete/{id}(id=${packet.id})}">删除</a></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <a th:href="@{'/test?pn='+${packetPage.firstPage}}">首页</a>
-                <c:if test="${packetPage.hasPreviousPage}"><a th:href="@{'/test?pn='+${packetPage.prePage}}">上一页</a>
+                <a th:href="@{'/multiDir?pn='+${packetPage.firstPage}}">首页</a>
+                <c:if test="${packetPage.hasPreviousPage}"><a
+                        th:href="@{'/multiDir?pn='+${packetPage.prePage}}">上一页</a>
                 </c:if>
 
-                <c:if test="${packetPage.hasNextPage}"><a th:href="@{'/test?pn='+${packetPage.nextPage}}">下一页</a></c:if>
+                <c:if test="${packetPage.hasNextPage}"><a th:href="@{'/multiDir?pn='+${packetPage.nextPage}}">下一页</a>
+                </c:if>
 
-                <a th:href="@{'/test?pn='+${packetPage.lastPage}}">最后页</a>
+                <a th:href="@{'/multiDir?pn='+${packetPage.lastPage}}">最后页</a>
                 <p>
                     <span>共</span>
                     <span th:text="${packetPage.pages}"></span>
@@ -139,14 +138,14 @@
             <nav id="menu">
                 <ul>
                     <li><a href="/classify">流量包判别/classify</a></li>
-                    <li><a href="/index">抓包/index</a></li>
+                    <li><a href="/grab">抓包/grab</a></li>
                     <li><a href="/packet">数据包管理/home</a></li>
                     <li><a href="/feature">提取特征/feature</a></li>
                     <li><a href="/train">数据流量训练模型/train</a></li>
                     <li><a href="/model">模型信息管理/model</a></li>
                     <li><a href="/test">测试模型/test</a></li>
-                    <li><a href="/testMulti">多分类/multi</a></li>
-                    <li><a href="http://10.170.50.58:8089/relay-country.html">态势感知</a></li>
+
+                    <li><a href="http://127.0.0.1:8081">态势感知</a></li>
                 </ul>
             </nav>
 
