@@ -102,8 +102,4 @@ public class BridgeService {
         return list;
     }
 
-    public static void main(String[] args) throws JSchException, SftpException, IOException {
-        new BridgeService().getBridgesFromRemote();
-    }
-
 }

@@ -35,8 +35,6 @@ public class TestService {
      */
     public List<Flow> getModelClassifyList(String testname, String testPath, String modelPath, String featurePath) {
         ArrayList<Flow> display = new ArrayList<Flow>();
-        ArrayList<Flow> torList = new ArrayList<Flow>();
-        ArrayList<Flow> nonTorList = new ArrayList<Flow>();
         try {
             ArrayList<String[]> csvList = new ArrayList<String[]>();
             String csvFilePath = testPath;
@@ -51,21 +49,10 @@ public class TestService {
             //更新csv
             CsvUtil.updateFullCSV(csvFilePath, csvList, classifyResult);
             display = arffUtil.attach(boundary, display, csvList, classifyResult);
-            for (int i = 0; i < display.size(); i++) {
-                if ("TOR".equals(display.get(i).getLabel())) {
-                    torList.add(display.get(i));
-                } else {
-                    nonTorList.add(display.get(i));
-                }
-            }
-            String torTmpPath = PropertiesUtil.getPcapCsvPath() + "multiTmp" + testname;
-            CsvUtil.saveTmpCsv(torTmpPath, torList);
-            Thread.sleep(1000);
-
+            CsvUtil.save(display,testname);
             log.info("测试成功结束！");
         } catch (Exception ex) {
-            ex.printStackTrace();
-            System.out.println(ex);
+            log.error("获取二分类结果失败");
         }
         return display;
     }
@@ -86,11 +73,9 @@ public class TestService {
             ArrayList<String> classifyResult = algorithmUtil.useModelclassifyMulti(testName, testPath, modelPath, featurePath);
             CsvUtil.updateFullCSV(csvFilePath, csvList, classifyResult);
             display = arffUtil.attach(boundary, display, csvList, classifyResult);
-
             log.info("分类完成");
         } catch (Exception ex) {
-            ex.printStackTrace();
-            System.out.println(ex);
+            log.error("获取多分类结果失败");
         }
         return display;
     }

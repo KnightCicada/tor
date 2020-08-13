@@ -2,7 +2,7 @@
 <html lang="cn" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
-    <title>测试结果展示</title>
+    <title>错误</title>
     <link th:href="@{/css/default.css}" rel="stylesheet"/>
     <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
     <link th:href="@{/bootstrap/css/bootstrap.css}" rel="stylesheet"/>
@@ -101,97 +101,9 @@
             <!-- Header -->
             <header id="header">
                 <div class="logo">
-                    <a href="/classify">分类结果展示</a>
+                    <a href="/classify">错误</a>
                 </div>
             </header>
-
-            <form action="/classify_pcap" method="post" enctype="multipart/form-data">
-                <p>
-                    <label class="title">
-                        请选择pcap数据包
-                        <input type="file" name="file" value="pcap"/>
-                        <input type="submit" class="button" value="判别"/>
-                    </label>
-                </p>
-            </form>
-
-            <div th:if="${show_table} eq true ">
-                <fieldset>
-                    <legend>
-                        <strong style="width: 100px">二分类结果展示</strong>
-                    </legend>
-                </fieldset>
-                <div class="button">
-                    <p>总流量数目：<span th:text="${total}"></span></p>
-                    <p>TOR流量数目：<span th:text="${tor_size}"></span></p>
-                </div>
-                <div class="btn-group" data-toggle="buttons">
-                    <table class="table table-hover table-condensed" style="table-layout: fixed">
-                        <thead>
-                        <tr align="center">
-                            <th>源IP</th>
-                            <th>源port</th>
-                            <th>目的IP</th>
-                            <th>目的port</th>
-                            <th>协议</th>
-                            <th>是否为Tor</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="flow : ${result.data}">
-                            <td style="width:200px;" th:text="${flow.srcIP}"></td>
-                            <td style="width:200px;" th:text="${flow.srcPort}"></td>
-                            <td style="width:200px;" th:text="${flow.dstIP}"></td>
-                            <td style="width:200px;" th:text="${flow.dstPort}"></td>
-                            <td style="width:200px;" th:text="${flow.protocol}"></td>
-                            <td style="width:200px;" th:text="${flow.label}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <br><br><br><br><br><br>
-                <fieldset>
-                    <legend>
-                        <strong style="width: 100px">多分类结果统计</strong>
-                        <div class="button">
-                            <p>多分类流量总数：<span th:text="${Multitotal}"></span></p>
-                            <p>Video流量总数：<span th:text="${video}"></span></p>
-                            <p>Mail流量总数：<span th:text="${mail}"></span></p>
-                            <p>Browsing流量总数：<span th:text="${browsing}"></span></p>
-                            <p>Audio流量总数：<span th:text="${audio}"></span></p>
-                            <p>Other流量总数：<span th:text="${other}"></span></p>
-                        </div>
-                    </legend>
-                </fieldset>
-
-
-                <div class="btn-group" data-toggle="buttons">
-                    <table class="table table-hover table-condensed" style="table-layout: fixed">
-                        <thead>
-                        <tr align="center">
-                            <th>源IP</th>
-                            <th>源port</th>
-                            <th>目的IP</th>
-                            <th>目的port</th>
-                            <th>协议</th>
-                            <th>分类结果</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="result : ${multiResultList}">
-                            <td style="width:200px;" th:text="${result.getSrcIP()}"></td>
-                            <td style="width:200px;" th:text="${result.getSrcPort()}"></td>
-                            <td style="width:200px;" th:text="${result.getDstIP()}"></td>
-                            <td style="width:200px;" th:text="${result.getDstPort()}"></td>
-                            <td style="width:200px;" th:text="${result.getProtocol()}"></td>
-                            <td style="width:200px;" th:text="${result.getLabel()}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
         </div>
     </div>
 

@@ -79,11 +79,7 @@ public class MultiDirController {
             MultiNum multiNum = ProtocolLabel.protocolAndMultiNum(resultList);
 
             modelMap.addAttribute("total", resultList.size());
-            modelMap.addAttribute("chat", multiNum.getChat());
             modelMap.addAttribute("video", multiNum.getVideo());
-            modelMap.addAttribute("voip", multiNum.getVoip());
-            modelMap.addAttribute("p2p", multiNum.getP2p());
-            modelMap.addAttribute("file", multiNum.getFile());
             modelMap.addAttribute("mail", multiNum.getMail());
             modelMap.addAttribute("browsing", multiNum.getBrowsing());
             modelMap.addAttribute("audio", multiNum.getAudio());

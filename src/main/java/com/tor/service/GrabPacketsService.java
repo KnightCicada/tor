@@ -63,7 +63,11 @@ public class GrabPacketsService {
             log.info("数据包插入数据库受影响行数：{}", row);
         } else { //本地抓包
             if (isOSLinux()) {
-                grabPacketsLocalLinux(fileName, cmd, packetCount, protocol, selectWay);
+                try {
+                    grabPacketsLocalLinux(fileName, cmd, packetCount, protocol, selectWay);
+                } catch (Exception e) {
+                    throw new GlobalException(CodeMsg.TCPDUMP_ERROR);
+                }
             } else {
                 log.info("windows 平台无法捕获数据包");
                 throw new GlobalException(CodeMsg.WINDOWS_ERROR);
@@ -80,7 +84,11 @@ public class GrabPacketsService {
             command = cmd + " -w " + fullFile;
         }
         log.info("grabPackets：构造的cmd命令:{}", command);
-        LabelUtil.execute(command); //执行命令
+        try {
+            LabelUtil.execute(command);
+        } catch (Exception e) {
+            throw new GlobalException(CodeMsg.TCPDUMP_ERROR);
+        }
         if (ISCXFlowMeter.singlePcap(fullFile, PropertiesUtil.getPcapCsvPath())) {
             log.info("grabPackets local：数据包转换成功");
         } else {

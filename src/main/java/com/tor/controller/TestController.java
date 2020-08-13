@@ -6,7 +6,6 @@ import com.tor.domain.Flow;
 import com.tor.domain.Model;
 import com.tor.domain.MultiNum;
 import com.tor.domain.Packet;
-import com.tor.exception.GlobalException;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;
@@ -22,9 +21,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
 
 @Controller
@@ -69,24 +66,28 @@ public class TestController {
     public String test(@RequestParam("testFile") String testCsvPath, @RequestParam("modelName") String modelname, ModelMap modelMap) throws Exception {
         if (testCsvPath == null) {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-            return Const.TEST_PAGE;
+            return "ErrorPage";
         }
         //对testCsvPath进行处理得到测试文件名称
         String testFileName = testCsvPath.substring(testCsvPath.lastIndexOf("/")).replace("/", "");
         model = modelService.findExactModelByName(modelname);
         if (model == null) {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-            return Const.TEST_PAGE;
+            return "ErrorPage";
         } else {
             String modelPath = model.getModelPath();//.model
             String featurePath = model.getFeaturePath();//Feature.txt
             //调用测试算法，得到一个表，表示测试结果。
             List<Flow> resultList = testService.getModelClassifyList(testFileName, testCsvPath, modelPath, featurePath);
+            if (resultList.size() == 0) {
+                modelMap.addAttribute("result", Result.error(CodeMsg.TEST_ERROR));
+                return "ErrorPage";
+            }
             try {
                 Packet packet = packetService.findPacketByExactPath(testCsvPath);
                 packet.setType("已判别test");
                 packetService.updateType(packet);
-            } catch (Exception e){
+            } catch (Exception e) {
                 log.info(e.getMessage());
             }
             int torNum = 0;
@@ -99,20 +100,17 @@ public class TestController {
             String multimodelPath = model.getModelPath();//.model
             String multiFeaturePath = model.getFeaturePath();//Feature.txt
             String multiFileName = "multiTmp" + testFileName;
-            String multiFilePath = PropertiesUtil.getPcapCsvPath()+ multiFileName;
+            String multiFilePath = PropertiesUtil.getPcapCsvPath() + multiFileName;
             //调用测试算法，得到一个表，表示测试结果。
             List<Flow> multiResultList = testService.getModelClassifyListMulti(multiFileName, multiFilePath, multimodelPath, multiFeaturePath);
             MultiNum multiNum = ProtocolLabel.protocolAndMultiNum(multiResultList);
 
             modelMap.addAttribute("Multitotal", multiResultList.size());
-            modelMap.addAttribute("chat", multiNum.getChat());
             modelMap.addAttribute("video", multiNum.getVideo());
-            modelMap.addAttribute("voip", multiNum.getVoip());
-            modelMap.addAttribute("p2p", multiNum.getP2p());
-            modelMap.addAttribute("file", multiNum.getFile());
             modelMap.addAttribute("mail", multiNum.getMail());
             modelMap.addAttribute("browsing", multiNum.getBrowsing());
             modelMap.addAttribute("audio", multiNum.getAudio());
+            modelMap.addAttribute("other", multiNum.getOther());
             modelMap.addAttribute("resultList", resultList);
             modelMap.addAttribute("multiResultList", multiResultList);
 

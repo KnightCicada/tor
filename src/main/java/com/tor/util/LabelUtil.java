@@ -83,8 +83,4 @@ public class LabelUtil {
         return false;
     }
 
-
-    public static void main(String[] args) {
-        ISCXFlowMeter.singlePcap("D:/zyan/classifyData/torvideo1.pcap", PropertiesUtil.getPcapCsvPath());
-    }
 }

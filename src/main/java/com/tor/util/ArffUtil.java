@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 public class ArffUtil {
 
     /**
@@ -86,7 +87,7 @@ public class ArffUtil {
 //          System.out.println(arrayList.size());
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println(ex);
+            log.error("csv to arff 失败");
         }
         try {
             File mergeFile = new File(filePath2);
@@ -105,7 +106,7 @@ public class ArffUtil {
             fw.close();
 //          System.out.println("change done!");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("csv to arff 写入文件失败");
         }
     }
 
@@ -138,7 +139,7 @@ public class ArffUtil {
                 .append("@attribute idleStd numeric" + System.lineSeparator())
                 .append("@attribute idleMax numeric" + System.lineSeparator())
                 .append("@attribute idleMin numeric" + System.lineSeparator())
-                .append("@attribute label {CHAT,VIDEO,VOIP,P2P,FILE-TRANSFER,MAIL,BROWSING,AUDIO}" + System.lineSeparator())
+                .append("@attribute label {VIDEO,MAIL,BROWSING,AUDIO,OTHER}" + System.lineSeparator())
                 .append(System.lineSeparator())
                 .append("@data" + System.lineSeparator())
                 .toString();
@@ -172,7 +173,7 @@ public class ArffUtil {
 //          System.out.println(arrayList.size());
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println(ex);
+            log.error("csv to arff 失败");
         }
         try {
             File mergeFile = new File(filePath2);
@@ -191,7 +192,7 @@ public class ArffUtil {
             fw.close();
 //          System.out.println("change done!");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("csv to arff 写入文件失败");
         }
     }
 
@@ -255,7 +256,7 @@ public class ArffUtil {
             }
             reader.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("delete失败");
         }
 //      insert(flowList);
         StringBuilder stringBuilder1 = new StringBuilder();
@@ -326,7 +327,7 @@ public class ArffUtil {
             stringBuilder.append("@attribute ").append(feature[i]).append(" numeric").append(System.lineSeparator());
         }
         //多分类对应的表头
-        stringBuilder.append("@attribute ").append(feature[feature.length - 1]).append(" {CHAT,VIDEO,VOIP,P2P,FILE-TRANSFER,MAIL,BROWSING,AUDIO}").append(System.lineSeparator()).append(System.lineSeparator());
+        stringBuilder.append("@attribute ").append(feature[feature.length - 1]).append(" {VIDEO,MAIL,BROWSING,AUDIO,OTHER}").append(System.lineSeparator()).append(System.lineSeparator());
         stringBuilder.append("@data").append(System.lineSeparator());
         try {
             //ArrayList<String[]> csvList = new ArrayList<String[]>(); // 用来保存数据
@@ -368,7 +369,7 @@ public class ArffUtil {
             }
             reader.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("delete失败");
         }
 //      insert(flowList);
         StringBuilder stringBuilder1 = new StringBuilder();

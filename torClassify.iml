@@ -26,6 +26,10 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="core" level="application" />
+    <orderEntry type="library" name="maps" level="application" />
+    <orderEntry type="library" name="worldLow" level="application" />
+    <orderEntry type="library" name="animated" level="application" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.5.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:1.5.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:4.3.12.RELEASE" level="project" />
@@ -96,15 +100,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:4.3.12.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.16.18" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: com.test.packet:jpcap:0.0.1-SNAPSHOT">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jpcap.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="Maven: com.test:ISCXFlowMeter:0.0.1-SNAPSHOT">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/ISCXFlowMeter.jar!/" />
@@ -168,9 +163,5 @@
     <orderEntry type="library" scope="TEST" name="Maven: com.vaadin.external.google:android-json:0.0.20131108.vaadin1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:4.3.12.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.10.6" level="project" />
-    <orderEntry type="library" name="core" level="application" />
-    <orderEntry type="library" name="maps" level="application" />
-    <orderEntry type="library" name="worldLow" level="application" />
-    <orderEntry type="library" name="animated" level="application" />
   </component>
 </module>

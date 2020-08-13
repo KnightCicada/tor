@@ -40,7 +40,7 @@ public class RelayController {
             try {
                 country = resource.getString(country);
             } catch (Exception e) {
-                System.out.println();
+                log.error("展示失败");
             }
             WorldView worldView = new WorldView();
             worldView.setName(country);
@@ -65,7 +65,7 @@ public class RelayController {
             try {
                 r.setCountryCode(resource.getString(r.getCountryCode()));
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("展示top中继节点失败");
             }
         }
         modelMap.addAttribute("Top", top);

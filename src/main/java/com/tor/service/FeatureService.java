@@ -55,7 +55,7 @@ public class FeatureService {
             arffUtil.delete(trainFilePath, selectFeatures, trainDelete);
             log.info("FeatureService 特征提取成功结束");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("特征提取失败");
         }
     }
 
@@ -70,7 +70,7 @@ public class FeatureService {
             arffUtil.deleteMulti(trainFilePath, selectFeatures, trainDelete);
             log.info("FeatureService 特征提取成功结束");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("特征提取失败");
         }
     }
 

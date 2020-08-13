@@ -8,7 +8,6 @@ import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.service.ClassifyService;
 import com.tor.service.ModelService;
-import com.tor.service.PacketService;
 import com.tor.service.TestService;
 import com.tor.util.CsvUtil;
 import com.tor.util.PropertiesUtil;
@@ -64,12 +63,21 @@ public class ClassifyController {
             File fullPcapFile = new File(fullPcapName);
             //检测是否存在目标
             String isExistFile = PropertiesUtil.getPcapPath() + filePcapName;
+            List<Flow> list = null;
             if (!new File(isExistFile).exists()) {
                 file.transferTo(fullPcapFile);
                 result = classifyService.getClassifyResult(fullPcapName, filePcapName);
             } else {
-                List<Flow> list = classifyService.getFlowListFromFile(filePcapName);
+                list = classifyService.getFlowListFromFile(filePcapName);
                 result = Result.success(list);
+            }
+
+            List<Flow> lastList;
+
+            if (result == null || result.getData() == null) {
+                lastList = list;
+            } else {
+                lastList = result.getData();
             }
             int torSize = 0;
             if (result == null) {
@@ -89,20 +97,17 @@ public class ClassifyController {
             String testFileName = filePcapName + ".csv";
             String multiFileName = "multiTmp" + testFileName;
             String multiFilePath = PropertiesUtil.getPcapCsvPath() + multiFileName;
-
+            CsvUtil.save(lastList, testFileName);
             //调用测试算法，得到一个表，表示测试结果。
             List<Flow> multiResultList = testService.getModelClassifyListMulti(multiFileName, multiFilePath, multimodelPath, multiFeaturePath);
             MultiNum multiNum = ProtocolLabel.protocolAndMultiNum(multiResultList);
 
             modelMap.addAttribute("Multitotal", multiResultList.size());
-            modelMap.addAttribute("chat", multiNum.getChat());
             modelMap.addAttribute("video", multiNum.getVideo());
-            modelMap.addAttribute("voip", multiNum.getVoip());
-            modelMap.addAttribute("p2p", multiNum.getP2p());
-            modelMap.addAttribute("file", multiNum.getFile());
             modelMap.addAttribute("mail", multiNum.getMail());
             modelMap.addAttribute("browsing", multiNum.getBrowsing());
             modelMap.addAttribute("audio", multiNum.getAudio());
+            modelMap.addAttribute("other", multiNum.getOther());
             modelMap.addAttribute("multiResultList", multiResultList);
 
             System.out.println("result.size: " + result.getData().size());
