@@ -50,7 +50,8 @@ public class ModelController {
     public String deleteModel(@PathVariable Integer id, ModelMap map) {
         boolean res = DeleteUtil.deleteModel(modelService.findModelById(id));
         if (!res) {
-            throw new GlobalException(CodeMsg.DELETE_MODEL_ERROR);
+            map.addAttribute("result", Result.error(CodeMsg.DELETE_FILE_ERROR));
+            return Const.MODEL_PAGE;
         }
         modelService.deleteModel(id);
         List<Model> resList = modelService.findAllModelNoMul();

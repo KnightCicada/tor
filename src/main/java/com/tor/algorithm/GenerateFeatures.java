@@ -6,9 +6,10 @@ import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.Ranker;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
-
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 
+@Slf4j
 public class GenerateFeatures {
     ArffUtil arffUtil = new ArffUtil();
 
@@ -67,7 +68,7 @@ public class GenerateFeatures {
             return attrInfoGainInfo.toString();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("获取特征失败");
         }
         return null;
     }
@@ -125,7 +126,7 @@ public class GenerateFeatures {
             return attrInfoGainInfo.toString();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("获取特征失败");
         }
         return null;
     }

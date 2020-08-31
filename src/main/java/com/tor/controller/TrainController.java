@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tor.domain.Packet;
 import com.tor.domain.Train;
+import com.tor.exception.GlobalException;
+import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.service.FeatureService;
 import com.tor.service.PacketService;
@@ -53,7 +55,6 @@ public class TrainController {
      */
     @RequestMapping(value = "/process")
     public String feature(@RequestParam("trainFile") String traincsvPath, @RequestParam("algorithm") String algorithm, ModelMap map) throws Exception {
-        //对traincsvPath进行处理，得到csv文件的名字
         String trainFileName = traincsvPath.substring(traincsvPath.lastIndexOf("/")).replace("/", "");
         String arffFilePath = PropertiesUtil.getArff() + trainFileName.replace(".csv", "") + ".arff";
         String modelInfo = PropertiesUtil.getModelInfo() + trainFileName.replace(".csv", "") + algorithm + "Info" + ".txt";
@@ -67,9 +68,13 @@ public class TrainController {
         train.setModelInfo(modelInfo);
         train.setModelPath(modelPath);
         train.setModelName(modelname);
-
-        featureService.training(train);//进行机器学习，训练集训练出模型。
-        String info = algorithmUtil.readModelInfo(train.getModelInfo());
+        String info;
+        try {
+            featureService.training(train);//进行机器学习，训练集训练出模型。
+            info = algorithmUtil.readModelInfo(train.getModelInfo());
+        } catch (Exception e) {
+            throw new GlobalException(CodeMsg.TRAIN_ERROR);
+        }
         map.addAttribute("info", info);
         return Const.SHOW_RESULT_PAGE;
     }

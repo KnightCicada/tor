@@ -103,15 +103,6 @@
             <optional>true</optional>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.test.packet</groupId>
-            <artifactId>jpcap</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/jpcap.jar</systemPath>
-        </dependency>
-
         <dependency>
             <groupId>com.test</groupId>
             <artifactId>ISCXFlowMeter</artifactId>
@@ -188,28 +179,22 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+                    <includeSystemScope>true</includeSystemScope>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>UTF-8</encoding>
-                    <compilerArguments>
-                        <extdirs>${project.basedir}/lib</extdirs>
-                    </compilerArguments>
-                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -219,6 +204,7 @@
                     <encoding>utf-8</encoding>
                     <!-- 加入下面编译参数的配置及可以找到rt.jar -->
                     <compilerArguments>
+                        <extdirs>${project.basedir}/lib</extdirs>
                         <verbose />
                         <bootclasspath>${JAVA_HOME}/jre/lib/rt.jar${path.separator}${JAVA_HOME}/jre/lib/jce.jar</bootclasspath>
                     </compilerArguments>

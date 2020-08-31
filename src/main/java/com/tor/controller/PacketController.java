@@ -115,7 +115,8 @@ public class PacketController {
     public String deletePacket(@PathVariable Integer id, ModelMap modelMap) {
         boolean res = DeleteUtil.deletePacket(packetService.findPacketById(id));
         if (!res) {
-            throw new GlobalException(CodeMsg.DELETE_FILE_ERROR);
+            modelMap.addAttribute("result", Result.error(CodeMsg.DELETE_FILE_ERROR));
+            return Const.PACKET_PAGE;
         }
         packetService.deletePacket(id);
         List<Packet> resList = packetService.findAllPacket();
@@ -156,11 +157,10 @@ public class PacketController {
                 return Const.PACKET_PAGE;
             }
             String filePcapName = file.getOriginalFilename();
-
             String suffixName = filePcapName.substring(filePcapName.lastIndexOf("."));
             if (!".pcap".equals(suffixName)) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.INVIVAD_FILE));
-                return Const.PACKET_PAGE;
+                return "ErrorPage";
             }
             //path为要保存的pcap地址拼接原始fileName
             String fullPcapPath = PropertiesUtil.getPcapPath() + filePcapName;
@@ -179,7 +179,7 @@ public class PacketController {
                     throw new GlobalException(CodeMsg.TRANSFER_EXCEPT);
                 }
                 String fullCsvPath = PropertiesUtil.getPcapCsvPath() + "ISCX_" + filePcapName + ".csv";
-                if ( !LabelUtil.singleCsvLabel(fullCsvPath, type)) {
+                if (!LabelUtil.singleCsvLabel(fullCsvPath, type)) {
                     throw new GlobalException(CodeMsg.LABEL_ERROR);
                 }
                 Packet packet = new Packet();
@@ -192,7 +192,8 @@ public class PacketController {
 
             }
         } catch (Exception e) {
-            log.error(e.toString());
+            modelMap.addAttribute("result", Result.error(CodeMsg.PACKET_UPLOAD_ERROR));
+            return "ErrorPage";
         }
         //加入数据包之后，显示现有数据包
         List<Packet> packetList = packetService.findAllPacketDesc();

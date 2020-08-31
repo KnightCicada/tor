@@ -54,4 +54,15 @@ public class CsvUtil {
         }
         csvWriter.close();
     }
+
+    public static void save(List<Flow> result,String csvName) throws IOException {
+        ArrayList<Flow> torList=new ArrayList<>();
+        for (int i = 0; i < result.size(); i++) {
+            if ("TOR".equals(result.get(i).getLabel())) {
+                torList.add(result.get(i));
+            }
+        }
+        String torTmpPath = PropertiesUtil.getPcapCsvPath() + "multiTmp" + csvName;
+        CsvUtil.saveTmpCsv(torTmpPath, torList);
+    }
 }

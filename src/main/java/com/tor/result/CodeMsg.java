@@ -19,6 +19,10 @@ public class CodeMsg {
     public static CodeMsg DELETE_FILE_ERROR = new CodeMsg(500205, "文件删除失败！");
     public static final CodeMsg DELETE_MODEL_ERROR = new CodeMsg(500206, "删除模型失败");
     public static final CodeMsg WINDOWS_ERROR = new CodeMsg(500206, "windows平台无法抓包");
+    public static final CodeMsg TCPDUMP_ERROR = new CodeMsg(500206, "tcpdump命令出现错误，请输入正确的tcpdump命令");
+    public static final CodeMsg PACKET_UPLOAD_ERROR = new CodeMsg(500207, "数据包上传失败");
+    public static final CodeMsg TRAIN_ERROR = new CodeMsg(500208, "模型训练失败");
+    public static final CodeMsg TEST_ERROR = new CodeMsg(500209, "分类失败");
 
 
     private int code;

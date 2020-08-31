@@ -18,37 +18,40 @@ public class PropertiesUtil {
         }
     }
 
+    public static String getlocalDir() {
+        return props.getProperty("localDir");
+    }
 
     public static String getPcapPath() {
-        return props.getProperty("raw_pcap_path");
+        return props.getProperty("localDir") + props.getProperty("raw_pcap_path");
     }
 
     public static String getPcapCsvPath() {
-        return props.getProperty("pcap_csv_path");
+        return props.getProperty("localDir") + props.getProperty("pcap_csv_path");
     }
 
     public static String getPython() {
-        return props.getProperty("python");
+        return  props.getProperty("python");
     }
 
     public static String getMakeLabelPy() {
-        return props.getProperty("makeLabelPy");
+        return props.getProperty("localDir") + props.getProperty("makeLabelPy");
     }
 
     public static String getArff() {
-        return props.getProperty("arff_path");
+        return props.getProperty("localDir") + props.getProperty("arff_path");
     }
 
     public static String getFeature() {
-        return props.getProperty("feature_path");
+        return props.getProperty("localDir") + props.getProperty("feature_path");
     }
 
     public static String getModel() {
-        return props.getProperty("model");
+        return props.getProperty("localDir") + props.getProperty("model");
     }
 
     public static String getModelInfo() {
-        return props.getProperty("model_info");
+        return props.getProperty("localDir") + props.getProperty("model_info");
     }
 
     public static String getremoteIP() {
@@ -68,7 +71,7 @@ public class PropertiesUtil {
     }
 
     public static String getRemoteToLocalPath() {
-        return props.getProperty("remote_pcap_to_local_path");
+        return props.getProperty("localDir") + props.getProperty("remote_pcap_to_local_path");
     }
 
     public static String getHttpProxy() {
@@ -80,10 +83,10 @@ public class PropertiesUtil {
     }
 
     public static String getRemoteFilePath() {
-        return props.getProperty("remote_file_path");
+        return  props.getProperty("remote_file_path");
     }
 
     public static String getLocalFilePath() {
-        return props.getProperty("local_file_path");
+        return props.getProperty("localDir") + props.getProperty("local_file_path");
     }
 }

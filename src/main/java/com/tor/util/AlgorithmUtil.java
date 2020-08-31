@@ -39,7 +39,7 @@ public class AlgorithmUtil {
             fw.write(features);//将字符串写入到指定的路径下的文件中
             fw.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("保存特征文件失败");
         }
     }
 
@@ -48,16 +48,6 @@ public class AlgorithmUtil {
      */
     public ArrayList readCsv(String csvPath) throws IOException {
         ArrayList csvList = new ArrayList<String[]>();
-        /*
-        String csvFilePath = csvPath;
-        CsvReader reader = new CsvReader(csvFilePath, ',', Charset.forName("UTF-8"));//csv是以逗号进行分隔。
-        while (reader.readRecord()) {
-            csvList.add(reader.getValues());
-        }
-        reader.close();
-        //return csvList;
-
-         */
         DataInputStream EquipmentIn = new DataInputStream(new FileInputStream(new File(csvPath)));
         BufferedReader EquipmentBr = new BufferedReader(new InputStreamReader(EquipmentIn, "GBK"));
         CsvReader csvReaderEquipment = new CsvReader(EquipmentBr);
@@ -78,7 +68,6 @@ public class AlgorithmUtil {
      * @return
      */
     public String readFeature(String filePath) throws IOException {
-
         StringBuilder result = new StringBuilder();
         FileReader reader = new FileReader(filePath);//构造一个BufferedReader类来读取文件
         BufferedReader br = new BufferedReader(reader);
@@ -156,14 +145,13 @@ public class AlgorithmUtil {
         if (!modelInfoTxt.exists()) {
             modelInfoTxt.createNewFile();//有路径才能创建文件
         }
-
         FileWriter fw;
         try {
             fw = new FileWriter(modelInfoTxt);
             fw.write(crossValidateModel(classifier, trainFile).toString());//将模型信息写入文件
             fw.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("保存模型文件失败");
         }
     }
 
@@ -240,26 +228,28 @@ public class AlgorithmUtil {
      * @throws Exception
      */
     private ArrayList<String> doClassify(String arffFilePath, String modelPath) throws Exception {
-        ConverterUtils.DataSource sourceTest = null;
-        sourceTest = new ConverterUtils.DataSource(arffFilePath);
-        Instances test = sourceTest.getDataSet();
-        if (test.classIndex() == -1) {
-            test.setClassIndex(test.numAttributes() - 1);
-        }
-        ArrayList<String> result = new ArrayList<String>();
-        //加载模型
-        FilteredClassifier fc = (FilteredClassifier) weka.core.SerializationHelper.read(modelPath);
-//        log.info("加载的模型为：" + fc);
-        int sum = test.numInstances();
-        // 输出预测结果
-//		System.out.println(sum);
-        for (int i = 0; i < sum; i++) {
-            double pred = fc.classifyInstance(test.instance(i));
-            //System.out.println(pred);1.0是notor 0.0是tor
-            String predicted = test.classAttribute().value((int) pred);
-            //System.out.println(predicted);输出的是tor notor
-            // 将分类结果加入ArrayList
-            result.add(predicted);
+        ArrayList<String> result = null;
+        try {
+            ConverterUtils.DataSource sourceTest = null;
+            sourceTest = new ConverterUtils.DataSource(arffFilePath);
+            Instances test = sourceTest.getDataSet();
+            if (test.classIndex() == -1) {
+                test.setClassIndex(test.numAttributes() - 1);
+            }
+            result = new ArrayList<String>();
+            //加载模型
+            FilteredClassifier fc = (FilteredClassifier) weka.core.SerializationHelper.read(modelPath);
+            int sum = test.numInstances();
+            for (int i = 0; i < sum; i++) {
+                double pred = fc.classifyInstance(test.instance(i));
+                //System.out.println(pred);1.0是notor 0.0是tor
+                String predicted = test.classAttribute().value((int) pred);
+                //System.out.println(predicted);输出的是tor notor
+                // 将分类结果加入ArrayList
+                result.add(predicted);
+            }
+        } catch (Exception e) {
+            log.error("分类失败");
         }
         return result;//result 只是很多行数据的最后一列数值，tor or notor。是个 sum*1的数组。
     }

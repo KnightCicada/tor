@@ -9,7 +9,9 @@ import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GenerateModel {
     Model model = new Model();
     AlgorithmUtil algorithmUtil = new AlgorithmUtil();
@@ -39,30 +41,34 @@ public class GenerateModel {
         } else if ("RandomForest".equals(algorithm)) {
             flag = 2;
         }
-        // 1.C4.5（J48）
-        if (flag == 1) {
-            FilteredClassifier fc = new FilteredClassifier();
-            J48 j48 = new J48();
-            fc.setClassifier(j48);
-            fc.buildClassifier(trainFile);
-            //保存模型
-            algorithmUtil.saveModel(fc, train);
-            //保存模型十折交叉验证信息
-            algorithmUtil.saveModelInfo(fc, trainFile, train);
-            model = algorithmUtil.getModel();
-        }
-        // 2.RandomForest
-        else if (flag == 2) {
-            FilteredClassifier fc = new FilteredClassifier();
-            RandomForest rf = new RandomForest();
-            fc.setClassifier(rf);
-            fc.buildClassifier(trainFile);
-            //保存模型,flag指示模型类别
-            //AlgorithmUtil b = new AlgorithmUtil();
-            algorithmUtil.saveModel(fc, train);
-            //保存模型十折交叉验证信息
-            algorithmUtil.saveModelInfo(fc, trainFile, train);
-            model = algorithmUtil.getModel();
+        try {
+            // 1.C4.5（J48）
+            if (flag == 1) {
+                FilteredClassifier fc = new FilteredClassifier();
+                J48 j48 = new J48();
+                fc.setClassifier(j48);
+                fc.buildClassifier(trainFile);
+                //保存模型
+                algorithmUtil.saveModel(fc, train);
+                //保存模型十折交叉验证信息
+                algorithmUtil.saveModelInfo(fc, trainFile, train);
+                model = algorithmUtil.getModel();
+            }
+            // 2.RandomForest
+            else if (flag == 2) {
+                FilteredClassifier fc = new FilteredClassifier();
+                RandomForest rf = new RandomForest();
+                fc.setClassifier(rf);
+                fc.buildClassifier(trainFile);
+                //保存模型,flag指示模型类别
+                //AlgorithmUtil b = new AlgorithmUtil();
+                algorithmUtil.saveModel(fc, train);
+                //保存模型十折交叉验证信息
+                algorithmUtil.saveModelInfo(fc, trainFile, train);
+                model = algorithmUtil.getModel();
+            }
+        }catch (Exception e){
+            log.error("生成模型失败");
         }
     }
 }

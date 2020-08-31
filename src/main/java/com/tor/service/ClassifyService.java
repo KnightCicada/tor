@@ -68,6 +68,7 @@ public class ClassifyService {
 
         //更新csv结果
         CsvUtil.updateFullCSVTwoAu(fullCsvPath, resultList);
+        CsvUtil.save(resultList,csvName);
         //写入数据库
         if (resultList.size() > 0) {
             Packet packet = new Packet();
@@ -75,10 +76,10 @@ public class ClassifyService {
             packet.setCsvPath(fullCsvPath);
             packet.setType("已判别test");
             packet.setPacketPath(PropertiesUtil.getPcapPath());
-            if (packetService.insertPacket(packet) < 0) {
+            try {
+                packetService.insertPacket(packet);
+            } catch (Exception e) {
                 log.info("数据包插入失败:{}", packet.toString());
-            } else {
-                log.info("数据包插入成功:{}", packet.toString());
             }
         }
         return Result.success(resultList);

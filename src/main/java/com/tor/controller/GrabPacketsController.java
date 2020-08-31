@@ -2,6 +2,7 @@ package com.tor.controller;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
+import com.tor.result.Const;
 import com.tor.service.GrabPacketsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,6 @@ public class GrabPacketsController {
 
     @Autowired
     private GrabPacketsService grabPacketsService;
-
-    public static void main(String[] args) throws IOException, JSchException, SftpException {
-//        connect111();
-    }
 
     @RequestMapping(value = "/index")
     public String index()  {
@@ -59,7 +56,7 @@ public class GrabPacketsController {
         response.setContentType("text/html;charset=utf-8");
         response.getWriter().write("<script>alert('正在抓包，抓包成功之后将存入数据库，数据包名称为：" + fileName + "！网页将跳转到抓包页面');  window.location='index';</script>");
         response.getWriter().flush();
-        return "grab";
+        return Const.GRAB_PAGE;
     }
 
 }

@@ -23,10 +23,12 @@
 
         .dev_re {
             position: absolute;
-            left: 450px;
-            top: 120px;
+            left: 750px;
+            top: 1400px;
             width: 600px;
             height: 450px;
+	        background-color: rgba(220, 220, 220, 0.2);
+
         }
 
         .releation {
@@ -37,16 +39,20 @@
 
         .pie {
             position: absolute;
-            left: 50px;
-            top: 120px;
+            left: 250px;
+            top: 1400px;
             width: 360px;
             height: 450px;
+			background-color: rgba(220, 220, 220, 0.2);
+
         }
 
         .modpie {
             background-color: rgba(250, 250, 250, 0);
             width: 360px;
             height: 450px;
+			color: white;
+
         }
 
         .brandpie {
@@ -57,14 +63,14 @@
 
         .sankey {
             position: absolute;
-            left: 1130px;
+            left: 50px;
             top: 120px;
 
         }
 
         .dev_sankey {
-            width: 1000px;
-            height: 850px;
+            width: 2000px;
+            height: 1700px;
             background-color: rgba(100, 149, 237, 0.1);
         }
 
@@ -103,8 +109,8 @@
 
         .file {
             position: absolute;
-            left: 50px;
-            top: 620px;
+            left: 1250px;
+            top: 1400px;
             /*width: 1000px;*/
             /*height: 500px;*/
             background-color: rgba(220, 220, 220, 0.2);
@@ -135,17 +141,17 @@
 <body>
 
 <div class="dev_re">
-    <center class="ftitle"><a href="/trace" target="_blank"
-                              title="点击可跳转到关联关系图页面">关联关系图</a></center>
+   <div class="ftitle" style="text-align: center;"><a href="/trace" target="_blank"
+                              title="点击可跳转到关联关系图页面">关联关系图</a></div>
     <iframe class="releation" SRC="/trace" frameborder=0></iframe>
 </div>
 
 <div class="pie">
-    <center class="ftitle"><a href="/bridge" target="_blank"
+    <div class="ftitle" style="text-align: center;"><a href="/bridge" target="_blank"
                               title="点击可跳转到网桥节点探测页面">网桥节点探测</a>
                         <a href="http://127.0.0.1:8081" target="_blank"
                            title="点击可跳转到态势感知页面">态势感知</a>
-    </center>
+    </div>
     <iframe class="modpie" SRC="/bridge" frameborder=0></iframe>
     <!--        <iframe class="brandpie" SRC="/" frameborder=0></iframe>-->
 </div>

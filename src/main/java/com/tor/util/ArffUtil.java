@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 public class ArffUtil {
 
     /**
@@ -86,7 +87,7 @@ public class ArffUtil {
 //          System.out.println(arrayList.size());
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println(ex);
+            log.error("csv to arff 失败");
         }
         try {
             File mergeFile = new File(filePath2);
@@ -105,7 +106,7 @@ public class ArffUtil {
             fw.close();
 //          System.out.println("change done!");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("csv to arff 写入文件失败");
         }
     }
 
@@ -172,7 +173,7 @@ public class ArffUtil {
 //          System.out.println(arrayList.size());
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println(ex);
+            log.error("csv to arff 失败");
         }
         try {
             File mergeFile = new File(filePath2);
@@ -191,7 +192,7 @@ public class ArffUtil {
             fw.close();
 //          System.out.println("change done!");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("csv to arff 写入文件失败");
         }
     }
 
@@ -255,7 +256,7 @@ public class ArffUtil {
             }
             reader.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("delete失败");
         }
 //      insert(flowList);
         StringBuilder stringBuilder1 = new StringBuilder();
@@ -368,7 +369,7 @@ public class ArffUtil {
             }
             reader.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("delete失败");
         }
 //      insert(flowList);
         StringBuilder stringBuilder1 = new StringBuilder();

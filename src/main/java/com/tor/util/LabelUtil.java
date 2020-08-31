@@ -34,6 +34,7 @@ public class LabelUtil {
         return false;
     }
 
+
     /*
      一个目录下的文件打标签
      */
@@ -83,8 +84,4 @@ public class LabelUtil {
         return false;
     }
 
-
-    public static void main(String[] args) {
-        ISCXFlowMeter.singlePcap("D:/zyan/classifyData/torvideo1.pcap", PropertiesUtil.getPcapCsvPath());
-    }
 }

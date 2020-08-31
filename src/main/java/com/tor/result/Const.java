@@ -12,6 +12,7 @@ public class Const {
     public static final String TRACE_PAGE = "Trace";
     public static final String HOME_PAGE = "Home";
     public static final String TOP_RELAYS_PAGE = "TopRelays";
+    public static final String GRAB_PAGE = "grab";
     //multi
     public static final String FEATURE_MUTLI_PAGE = "FeatureMulti";
     public static final String TEST_MULTI_PAGE = "TestFunctionMulti";
