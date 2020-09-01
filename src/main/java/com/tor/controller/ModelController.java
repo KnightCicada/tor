@@ -3,13 +3,11 @@ package com.tor.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tor.domain.Model;
-import com.tor.exception.GlobalException;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.service.ModelService;
 import com.tor.util.DeleteUtil;
-import com.tor.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,9 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
 
 @Controller

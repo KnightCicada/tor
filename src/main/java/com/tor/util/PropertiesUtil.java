@@ -31,7 +31,7 @@ public class PropertiesUtil {
     }
 
     public static String getPython() {
-        return  props.getProperty("python");
+        return props.getProperty("python");
     }
 
     public static String getMakeLabelPy() {
@@ -83,7 +83,7 @@ public class PropertiesUtil {
     }
 
     public static String getRemoteFilePath() {
-        return  props.getProperty("remote_file_path");
+        return props.getProperty("remote_file_path");
     }
 
     public static String getLocalFilePath() {

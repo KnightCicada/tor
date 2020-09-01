@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class DownLoadUtil {
         JSch jsch = new JSch();
         Session session = jsch.getSession(PropertiesUtil.getRemoteRootName(), PropertiesUtil.getremoteIP(), 22);
 
-        ProxyHTTP proxyHTTP= new  ProxyHTTP(PropertiesUtil.getHttpProxy(),PropertiesUtil.getHttpProxyPort());
+        ProxyHTTP proxyHTTP = new ProxyHTTP(PropertiesUtil.getHttpProxy(), PropertiesUtil.getHttpProxyPort());
         session.setProxy(proxyHTTP);
         File file = new File(localDir + fileName);
 
@@ -58,10 +59,11 @@ public class DownLoadUtil {
 
     /**
      * 下载csv,返回csv内容
+     *
      * @param address full地址，https://torstatus.rueckgr.at/query_export.php/Tor_query_EXPORT.csv
      * @return csv内容
      * @throws NoSuchAlgorithmException ssl算法
-     * @throws KeyManagementException  证书
+     * @throws KeyManagementException   证书
      */
     public static List<String> downloadCSV(String address) throws NoSuchAlgorithmException, KeyManagementException {
 
@@ -93,28 +95,28 @@ public class DownLoadUtil {
             String host = PropertiesUtil.getHttpProxy();
             int port = PropertiesUtil.getHttpProxyPort();
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
-            conn = (HttpURLConnection)url.openConnection(proxy);
+            conn = (HttpURLConnection) url.openConnection(proxy);
             // 读取服务器端返回的内容
             is = conn.getInputStream();
             //读取内容
-            isr = new InputStreamReader(is,"utf-8");
+            isr = new InputStreamReader(is, StandardCharsets.UTF_8);
             BufferedReader br = new BufferedReader(isr);
             String line = null;
             int count = 0;
             while ((line = br.readLine()) != null) {
                 count++;
-                if (count > 1){
+                if (count > 1) {
                     list.add(line);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
-                if (isr != null){
+                if (isr != null) {
                     isr.close();
                 }
-                if (is != null){
+                if (is != null) {
                     is.close();
                 }
             } catch (IOException e) {

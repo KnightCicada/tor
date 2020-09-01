@@ -84,7 +84,7 @@ public class FeatureService {
         try {
             modelService.insertModel(newModel);
             log.info("FeatureService 成功将模型信息插入数据库");
-        } catch (Exception e){
+        } catch (Exception e) {
             log.info(e.getMessage());
         }
     }

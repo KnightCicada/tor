@@ -2,16 +2,13 @@ package com.tor.service;
 
 import com.csvreader.CsvReader;
 import com.tor.domain.Flow;
-import com.tor.domain.Packet;
 import com.tor.util.AlgorithmUtil;
 import com.tor.util.ArffUtil;
 import com.tor.util.CsvUtil;
-import com.tor.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +46,7 @@ public class TestService {
             //更新csv
             CsvUtil.updateFullCSV(csvFilePath, csvList, classifyResult);
             display = arffUtil.attach(boundary, display, csvList, classifyResult);
-            CsvUtil.save(display,testname);
+            CsvUtil.save(display, testname);
             log.info("测试成功结束！");
         } catch (Exception ex) {
             log.error("获取二分类结果失败");

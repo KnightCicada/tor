@@ -4,12 +4,12 @@ package com.tor.algorithm;
 import com.tor.domain.Model;
 import com.tor.domain.Train;
 import com.tor.util.AlgorithmUtil;
+import lombok.extern.slf4j.Slf4j;
 import weka.classifiers.meta.FilteredClassifier;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GenerateModel {
@@ -67,7 +67,7 @@ public class GenerateModel {
                 algorithmUtil.saveModelInfo(fc, trainFile, train);
                 model = algorithmUtil.getModel();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("生成模型失败");
         }
     }

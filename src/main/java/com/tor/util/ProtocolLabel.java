@@ -32,30 +32,15 @@ public class ProtocolLabel {
     }
 
     public static MultiNum protocolAndMultiNum(List<Flow> flowList) {
-        int chat = 0;
         int video = 0;
-        int voip = 0;
-        int p2p = 0;
-        int file = 0;
         int mail = 0;
         int browsing = 0;
         int audio = 0;
+        int other = 0;
         for (Flow f : flowList) {
             switch (f.getLabel()) {
-                case "CHAT":
-                    chat++;
-                    break;
                 case "VIDEO":
                     video++;
-                    break;
-                case "VOIP":
-                    voip++;
-                    break;
-                case "P2P":
-                    p2p++;
-                    break;
-                case "FILE-TRANSFER":
-                    file++;
                     break;
                 case "MAIL":
                     mail++;
@@ -66,6 +51,9 @@ public class ProtocolLabel {
                 case "AUDIO":
                     audio++;
                     break;
+                case "OTHER":
+                    audio++;
+                    break;
                 default:
             }
             if ("6".equals(f.getProtocol())) {
@@ -74,6 +62,6 @@ public class ProtocolLabel {
                 f.setProtocol("UDP");
             }
         }
-        return new MultiNum(chat, video, voip, p2p, file, mail, browsing, audio);
+        return new MultiNum(video, mail, browsing, audio, other);
     }
 }

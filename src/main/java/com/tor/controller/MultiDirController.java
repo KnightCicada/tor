@@ -12,19 +12,15 @@ import com.tor.result.Result;
 import com.tor.service.ModelService;
 import com.tor.service.PacketService;
 import com.tor.service.TestService;
-import com.tor.util.PropertiesUtil;
 import com.tor.util.ProtocolLabel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -79,11 +75,7 @@ public class MultiDirController {
             MultiNum multiNum = ProtocolLabel.protocolAndMultiNum(resultList);
 
             modelMap.addAttribute("total", resultList.size());
-            modelMap.addAttribute("chat", multiNum.getChat());
             modelMap.addAttribute("video", multiNum.getVideo());
-            modelMap.addAttribute("voip", multiNum.getVoip());
-            modelMap.addAttribute("p2p", multiNum.getP2p());
-            modelMap.addAttribute("file", multiNum.getFile());
             modelMap.addAttribute("mail", multiNum.getMail());
             modelMap.addAttribute("browsing", multiNum.getBrowsing());
             modelMap.addAttribute("audio", multiNum.getAudio());

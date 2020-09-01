@@ -24,12 +24,12 @@ public class GrabPacketsController {
     private GrabPacketsService grabPacketsService;
 
     @RequestMapping(value = "/index")
-    public String index()  {
+    public String index() {
         return "classify";
     }
 
     @RequestMapping(value = "/grab")
-    public String grabPacket()  {
+    public String grabPacket() {
         return "grab";
     }
 

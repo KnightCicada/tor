@@ -45,7 +45,7 @@ public class CsvUtil {
     }
 
     public static void saveTmpCsv(String fullCsvFile, List<Flow> torList) throws IOException {
-        CsvWriter csvWriter = new CsvWriter(fullCsvFile, ',', Charset.forName("UTF-8"));
+        CsvWriter csvWriter = new CsvWriter(fullCsvFile, ',', StandardCharsets.UTF_8);
         String header = "Source IP,Source Port,Destination IP,Destination Port,Protocol,Flow Duration,Flow Bytes/s,Flow Packets/s,Flow IAT Mean,Flow IAT Std,Flow IAT Max,Flow IAT Min,Fwd IAT Mean,Fwd IAT Std,Fwd IAT Max,Fwd IAT Min,Bwd IAT Mean,Bwd IAT Std,Bwd IAT Max,Bwd IAT Min,Active Mean,Active Std,Active Max,Active Min,Idle Mean,Idle Std,Idle Max,Idle Min,label";
         String[] headers = header.split(",");
         csvWriter.writeRecord(headers);
@@ -55,8 +55,8 @@ public class CsvUtil {
         csvWriter.close();
     }
 
-    public static void save(List<Flow> result,String csvName) throws IOException {
-        ArrayList<Flow> torList=new ArrayList<>();
+    public static void save(List<Flow> result, String csvName) throws IOException {
+        ArrayList<Flow> torList = new ArrayList<>();
         for (int i = 0; i < result.size(); i++) {
             if ("TOR".equals(result.get(i).getLabel())) {
                 torList.add(result.get(i));

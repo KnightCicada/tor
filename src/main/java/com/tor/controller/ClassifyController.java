@@ -8,10 +8,8 @@ import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.service.ClassifyService;
 import com.tor.service.ModelService;
-import com.tor.service.PacketService;
 import com.tor.service.TestService;
 import com.tor.util.CsvUtil;
-import com.tor.util.LabelUtil;
 import com.tor.util.PropertiesUtil;
 import com.tor.util.ProtocolLabel;
 import lombok.extern.slf4j.Slf4j;
@@ -104,15 +102,12 @@ public class ClassifyController {
             List<Flow> multiResultList = testService.getModelClassifyListMulti(multiFileName, multiFilePath, multimodelPath, multiFeaturePath);
             MultiNum multiNum = ProtocolLabel.protocolAndMultiNum(multiResultList);
 
-            modelMap.addAttribute("Multitotal", multiResultList.size());
-            modelMap.addAttribute("chat", multiNum.getChat());
+            modelMap.addAttribute("MultiTotal", multiResultList.size());
             modelMap.addAttribute("video", multiNum.getVideo());
-            modelMap.addAttribute("voip", multiNum.getVoip());
-            modelMap.addAttribute("p2p", multiNum.getP2p());
-            modelMap.addAttribute("file", multiNum.getFile());
             modelMap.addAttribute("mail", multiNum.getMail());
             modelMap.addAttribute("browsing", multiNum.getBrowsing());
             modelMap.addAttribute("audio", multiNum.getAudio());
+            modelMap.addAttribute("other", multiNum.getOther());
             modelMap.addAttribute("multiResultList", multiResultList);
 
             System.out.println("result.size: " + result.getData().size());

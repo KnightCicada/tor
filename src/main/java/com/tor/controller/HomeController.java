@@ -1,6 +1,5 @@
 package com.tor.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.tor.domain.*;
 import com.tor.result.Const;
 import com.tor.service.BridgeService;

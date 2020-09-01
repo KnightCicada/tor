@@ -2,6 +2,7 @@ package com.tor.util;
 
 import com.csvreader.CsvReader;
 import com.tor.domain.Flow;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,11 +11,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 public class ArffUtil {
 
@@ -61,7 +63,7 @@ public class ArffUtil {
             //把训练集csv中的数据(不带头部)全部读入csvList中。然后把后面24个属性存在了stringBuilder中，在到了arrayList中。
             ArrayList<String[]> csvList = new ArrayList<String[]>();
             String csvFilePath = filePath1;
-            CsvReader reader = new CsvReader(csvFilePath, ',', Charset.forName("UTF-8"));//csv是以逗号进行分隔。
+            CsvReader reader = new CsvReader(csvFilePath, ',', StandardCharsets.UTF_8);//csv是以逗号进行分隔。
             reader.readHeaders();//跳过头部
             while (reader.readRecord()) {
                 csvList.add(reader.getValues());
@@ -139,7 +141,7 @@ public class ArffUtil {
                 .append("@attribute idleStd numeric" + System.lineSeparator())
                 .append("@attribute idleMax numeric" + System.lineSeparator())
                 .append("@attribute idleMin numeric" + System.lineSeparator())
-                .append("@attribute label {CHAT,VIDEO,VOIP,P2P,FILE-TRANSFER,MAIL,BROWSING,AUDIO}" + System.lineSeparator())
+                .append("@attribute label {VIDEO,MAIL,BROWSING,AUDIO,OTHER}" + System.lineSeparator())
                 .append(System.lineSeparator())
                 .append("@data" + System.lineSeparator())
                 .toString();
@@ -147,7 +149,7 @@ public class ArffUtil {
             //把训练集csv中的数据(不带头部)全部读入csvList中。然后把后面24个属性存在了stringBuilder中，在到了arrayList中。
             ArrayList<String[]> csvList = new ArrayList<String[]>();
             String csvFilePath = filePath1;
-            CsvReader reader = new CsvReader(csvFilePath, ',', Charset.forName("UTF-8"));//csv是以逗号进行分隔。
+            CsvReader reader = new CsvReader(csvFilePath, ',', StandardCharsets.UTF_8);//csv是以逗号进行分隔。
             reader.readHeaders();//跳过头部
             while (reader.readRecord()) {
                 csvList.add(reader.getValues());
@@ -219,7 +221,7 @@ public class ArffUtil {
         try {
             //ArrayList<String[]> csvList = new ArrayList<String[]>(); // 用来保存数据
             String csvFilePath = filePath;
-            CsvReader reader = new CsvReader(csvFilePath, ',', Charset.forName("UTF-8")); // 一般用这编码读就可以了
+            CsvReader reader = new CsvReader(csvFilePath, ',', StandardCharsets.UTF_8); // 一般用这编码读就可以了
             reader.readHeaders(); // 跳过表头 如果需要表头的话，不要写这句。
             while (reader.readRecord()) { // 逐行读入除表头的数据
                 Flow flow = new Flow();
@@ -272,8 +274,8 @@ public class ArffUtil {
                 String firstLetter = fieldName.substring(0, 1).toUpperCase();//根据属性名称获得对应的属性值。
                 String getMethodName = "get" + firstLetter + fieldName.substring(1);
                 try {
-                    Method getMethod = flowClass.getMethod(getMethodName, new Class[]{});
-                    Object value = getMethod.invoke(flow, new Object[]{}); //这个对象字段get方法的值
+                    Method getMethod = flowClass.getMethod(getMethodName);
+                    Object value = getMethod.invoke(flow); //这个对象字段get方法的值
                     fieldMap.put(fieldName, value);//一个fileName 对应一个value。
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
@@ -327,12 +329,12 @@ public class ArffUtil {
             stringBuilder.append("@attribute ").append(feature[i]).append(" numeric").append(System.lineSeparator());
         }
         //多分类对应的表头
-        stringBuilder.append("@attribute ").append(feature[feature.length - 1]).append(" {CHAT,VIDEO,VOIP,P2P,FILE-TRANSFER,MAIL,BROWSING,AUDIO}").append(System.lineSeparator()).append(System.lineSeparator());
+        stringBuilder.append("@attribute ").append(feature[feature.length - 1]).append(" {VIDEO,MAIL,BROWSING,AUDIO,OTHER}").append(System.lineSeparator()).append(System.lineSeparator());
         stringBuilder.append("@data").append(System.lineSeparator());
         try {
             //ArrayList<String[]> csvList = new ArrayList<String[]>(); // 用来保存数据
             String csvFilePath = filePath;
-            CsvReader reader = new CsvReader(csvFilePath, ',', Charset.forName("UTF-8")); // 一般用这编码读就可以了
+            CsvReader reader = new CsvReader(csvFilePath, ',', StandardCharsets.UTF_8); // 一般用这编码读就可以了
             reader.readHeaders(); // 跳过表头 如果需要表头的话，不要写这句。
             while (reader.readRecord()) { // 逐行读入除表头的数据
                 Flow flow = new Flow();
@@ -385,8 +387,8 @@ public class ArffUtil {
                 String firstLetter = fieldName.substring(0, 1).toUpperCase();//根据属性名称获得对应的属性值。
                 String getMethodName = "get" + firstLetter + fieldName.substring(1);
                 try {
-                    Method getMethod = flowClass.getMethod(getMethodName, new Class[]{});
-                    Object value = getMethod.invoke(flow, new Object[]{}); //这个对象字段get方法的值
+                    Method getMethod = flowClass.getMethod(getMethodName);
+                    Object value = getMethod.invoke(flow); //这个对象字段get方法的值
                     fieldMap.put(fieldName, value);//一个fileName 对应一个value。
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();

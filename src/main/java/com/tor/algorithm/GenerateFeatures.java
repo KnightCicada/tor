@@ -1,12 +1,13 @@
 package com.tor.algorithm;
 
 import com.tor.util.ArffUtil;
+import lombok.extern.slf4j.Slf4j;
 import weka.attributeSelection.AttributeSelection;
 import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.Ranker;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
-import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 
 @Slf4j

@@ -41,7 +41,7 @@ public class BridgeController {
     @RequestMapping("/bridge_test")
     @ResponseBody
     public String bridgeCharts1() throws JSchException, SftpException, IOException {
-         bridgeService.getBridgesFromRemote();
+        bridgeService.getBridgesFromRemote();
         return "ssss";
     }
 

@@ -9,12 +9,10 @@ import com.tor.result.Result;
 import com.tor.util.*;
 import iscx.cs.unb.ca.ifm.ISCXFlowMeter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -68,7 +66,7 @@ public class ClassifyService {
 
         //更新csv结果
         CsvUtil.updateFullCSVTwoAu(fullCsvPath, resultList);
-        CsvUtil.save(resultList,csvName);
+        CsvUtil.save(resultList, csvName);
         //写入数据库
         if (resultList.size() > 0) {
             Packet packet = new Packet();

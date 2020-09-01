@@ -105,15 +105,12 @@ public class TestController {
             List<Flow> multiResultList = testService.getModelClassifyListMulti(multiFileName, multiFilePath, multimodelPath, multiFeaturePath);
             MultiNum multiNum = ProtocolLabel.protocolAndMultiNum(multiResultList);
 
-            modelMap.addAttribute("Multitotal", multiResultList.size());
-            modelMap.addAttribute("chat", multiNum.getChat());
+            modelMap.addAttribute("MultiTotal", multiResultList.size());
             modelMap.addAttribute("video", multiNum.getVideo());
-            modelMap.addAttribute("voip", multiNum.getVoip());
-            modelMap.addAttribute("p2p", multiNum.getP2p());
-            modelMap.addAttribute("file", multiNum.getFile());
             modelMap.addAttribute("mail", multiNum.getMail());
             modelMap.addAttribute("browsing", multiNum.getBrowsing());
             modelMap.addAttribute("audio", multiNum.getAudio());
+            modelMap.addAttribute("other", multiNum.getOther());
             modelMap.addAttribute("resultList", resultList);
             modelMap.addAttribute("multiResultList", multiResultList);
 

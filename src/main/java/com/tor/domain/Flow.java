@@ -373,8 +373,8 @@ public class Flow {
                 '}';
     }
 
-    public String[]toStringArray(Flow f){
-        ArrayList<String> res=new ArrayList<>();
+    public String[] toStringArray(Flow f) {
+        ArrayList<String> res = new ArrayList<>();
         res.add(f.getSrcIP());
         res.add(f.getSrcPort());
         res.add(f.getDstIP());
